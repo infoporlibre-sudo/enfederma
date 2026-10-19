@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/><meta content="#F8F4EF" name="theme-color"/><title>Valoración de la piel · Enfederma</title><style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Cormorant+Garamond:wght@400;500;600&display=swap');
+:root{
+  --ivory:#F8F4EF;
+  --blush:#F3E7E8;
+  --nude:#DCC8C2;
+  --taupe:#8B7E7A;
+  --ink:#2F2A28;
+  --gold:#C8A46A;
+  --gold-soft:#D8BC8E;
+  --white:#ffffff;
+  --line:#E9DDD8;
+  --radius:22px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--ivory);color:var(--ink);font-family:'DM Sans',sans-serif;line-height:1.6}
+a{text-decoration:none;color:inherit}
+.wrap{width:min(1160px,calc(100% - 44px));margin:auto}
+header{background:rgba(248,244,239,.94);position:sticky;top:0;z-index:10;border-bottom:1px solid var(--line);backdrop-filter:blur(10px)}
+header .wrap{display:flex;align-items:center;justify-content:space-between;min-height:78px}
+.logo{font-size:20px;font-weight:600;letter-spacing:.17em}
+.logo small{display:block;font-size:9px;letter-spacing:.26em;font-weight:500;color:var(--taupe)}
+nav{display:flex;gap:27px;align-items:center;font-size:13px}
+nav a:hover{color:var(--gold)}
+.button{display:inline-block;padding:13px 22px;background:var(--ink);border:1px solid var(--ink);color:var(--white);border-radius:100px;font-size:13px;font-weight:600;transition:.2s ease}
+.button:hover{background:#463f3c;border-color:#463f3c;transform:translateY(-1px)}
+.button.outline{background:transparent;color:var(--ink);border-color:var(--gold);box-shadow:inset 0 0 0 1px rgba(200,164,106,.22)}
+.button.outline:hover{background:#fbf8f5}
+.hero{display:grid;grid-template-columns:1fr 1fr;min-height:640px;align-items:center;gap:7%}
+.eyebrow{font-size:11px;letter-spacing:.23em;text-transform:uppercase;font-weight:700;color:var(--gold)}
+.hero h1,h2{font-family:'Cormorant Garamond',Georgia,serif;font-weight:500;line-height:1.03;letter-spacing:-.03em}
+.hero h1{font-size:clamp(50px,6vw,88px);margin:22px 0}
+.hero p{max-width:470px;color:var(--taupe);font-size:17px}
+.hero .actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}
+.photo{border-radius:220px 220px 24px 24px;overflow:hidden;min-height:530px;position:relative;display:flex;align-items:center;justify-content:center;background:linear-gradient(145deg,#f6efea 0%, #eadcdf 40%, #e1cdc7 72%, #d8bc8e 100%)}
+.photo:before{content:'';width:58%;height:60%;border-radius:50% 50% 20% 20%;background:radial-gradient(circle at 50% 32%, #fffaf7 0 20%, #f1e4df 21% 48%, #dfcbc6 49% 100%);box-shadow:0 68px 0 22px rgba(200,164,106,.18);transform:translateY(34px)}
+.photo:after{content:'CUIDADO · DELICADEZA · CRITERIO';position:absolute;bottom:23px;background:rgba(248,244,239,.92);padding:13px 19px;font-size:10px;letter-spacing:.16em;border-radius:999px;border:1px solid rgba(200,164,106,.25);color:var(--ink)}
+.section{padding:104px 0}
+.section h2{font-size:clamp(34px,4vw,60px);margin:10px 0 21px}
+.lead{max-width:690px;color:var(--taupe)}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:42px}
+.service{padding:35px;min-height:255px;border:1px solid var(--line);background:#fffdfb;border-radius:var(--radius);box-shadow:0 10px 30px rgba(47,42,40,.03)}
+.service .num{font-size:12px;color:var(--gold)}
+.service h3{font-family:'Cormorant Garamond',Georgia,serif;font-weight:500;font-size:31px;line-height:1.05;margin:38px 0 10px}
+.service p{font-size:14px;color:var(--taupe)}
+.blush{background:linear-gradient(180deg,#f7eeee 0%, #f6efea 100%);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.split{display:grid;grid-template-columns:.9fr 1.1fr;gap:12%;align-items:center}
+.circle{width:100%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 55% 35%, #fffaf7 0 12%, #efdeda 13% 35%, #e2cbc6 36% 63%, #d8bc8e 64% 100%);box-shadow:inset 0 0 90px rgba(255,255,255,.68), 0 12px 40px rgba(47,42,40,.06)}
+.steps{display:grid;gap:16px;margin-top:25px}
+.step{border-bottom:1px solid rgba(200,164,106,.28);padding-bottom:16px}
+.step strong{display:block}
+.step span{font-size:14px;color:var(--taupe)}
+.contact{text-align:center;background:linear-gradient(180deg,#f5ebec 0%, #f8f4ef 100%);border:1px solid var(--line);border-radius:28px;padding:75px 18px;box-shadow:0 12px 40px rgba(47,42,40,.04)}
+.contact p{margin:0 auto 27px;max-width:580px;color:var(--taupe)}
+.footer{display:flex;justify-content:space-between;gap:16px;padding:35px 0;color:var(--taupe);font-size:12px}
+.note{margin-top:18px;color:var(--taupe);font-size:12px}
+.accent-line{width:72px;height:2px;background:linear-gradient(90deg,var(--gold),transparent);margin:22px 0 0}
+@media(max-width:760px){
+  header .wrap{min-height:65px}
+  .logo{font-size:16px}
+  nav a:not(.button){display:block}
+  nav .button{padding:9px 13px}
+  .hero{grid-template-columns:1fr;gap:28px;padding:54px 0}
+  .hero h1{font-size:56px}
+  .photo{min-height:390px}
+  .grid{grid-template-columns:1fr}
+  .service{min-height:210px}
+  .split{grid-template-columns:1fr}
+  .circle{max-width:360px;margin:auto}
+  .section{padding:65px 0}
+  .footer{flex-direction:column}
+}
+
+.skin-id{background:#fffdfb;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.skin-id-inner{display:grid;grid-template-columns:1.2fr .8fr;gap:9%;align-items:center}
+.skin-id-info h2{font-size:clamp(74px,10vw,140px);letter-spacing:-.065em;margin:14px 0 4px;line-height:.91}
+.skin-id-info h2 em{font-style:normal;color:var(--gold)}.skin-star{color:var(--gold);font:400 28px 'DM Sans',sans-serif;vertical-align:top;margin-left:12px}
+.skin-id-info h3{font-family:'Cormorant Garamond',Georgia,serif;font-size:clamp(27px,3.5vw,39px);font-weight:500;margin:21px 0 10px}
+.skin-id-info p{color:var(--taupe);max-width:570px}
+.skin-chips{display:flex;flex-wrap:wrap;gap:9px;margin:23px 0 25px}.skin-chips span{font-size:12px;border:1px solid #e6d3cc;background:#f9f1f0;border-radius:40px;padding:8px 13px;color:#76635e}
+.skin-start{background:var(--ink)}.skin-id-info .skin-disclaimer{font-size:11px;line-height:1.65;margin-top:20px;max-width:540px}
+.skin-id-art{min-height:420px;position:relative;overflow:hidden;display:flex;justify-content:center;align-items:center;border-radius:220px 220px 20px 20px;background:radial-gradient(circle at 30% 20%,#fff9f5,#f0dde0 58%,#e0c9bf);border:1px solid #ebd8d3}
+.skin-orbit{position:absolute;border:1px solid rgba(200,164,106,.65);border-radius:50%;width:76%;aspect-ratio:1;transform:rotate(-22deg) scaleY(.68)}.orbit-two{width:96%;transform:rotate(40deg) scaleY(.72);border-color:rgba(200,164,106,.33)}
+.skin-monogram{font-family:'Cormorant Garamond',Georgia,serif;font-size:205px;line-height:1;color:#ffffffb8;text-shadow:0 7px 35px #c6a9a66b;z-index:1}.skin-monogram span{font:29px 'DM Sans',sans-serif;color:var(--gold);vertical-align:top}
+.skin-art-label{position:absolute;bottom:31px;font-size:10px;letter-spacing:.18em;color:#74615a;z-index:2}
+@media(max-width:760px){.skin-id-inner{grid-template-columns:1fr;gap:28px}.skin-id-info h2{font-size:82px}.skin-id-art{min-height:290px;max-height:320px}.skin-monogram{font-size:150px}}
+
+/* Navegación responsive accesible */
+header .wrap{position:relative}
+.menu-toggle{display:none;background:transparent;border:1px solid var(--line);width:45px;height:45px;border-radius:12px;padding:12px 10px;cursor:pointer;align-items:center;justify-content:center;flex-direction:column;gap:5px;color:var(--ink)}
+.menu-toggle span{display:block;width:22px;height:2px;background:currentColor;border-radius:2px;transition:transform .2s ease,opacity .2s ease}
+.menu-toggle[aria-expanded="true"] span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.menu-toggle[aria-expanded="true"] span:nth-child(2){opacity:0}
+.menu-toggle[aria-expanded="true"] span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+nav a:focus-visible,.button:focus-visible,.menu-toggle:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+section[id]{scroll-margin-top:95px}
+@media(max-width:960px){
+ .menu-toggle{display:flex;flex-shrink:0}
+ header nav{display:none;position:absolute;top:calc(100% + 1px);left:-22px;right:-22px;background:var(--ivory);padding:18px 22px 24px;box-shadow:0 18px 25px rgba(47,42,40,.1);border-bottom:1px solid var(--line);flex-direction:column;align-items:stretch;gap:0}
+ header nav.is-open{display:flex}
+ header nav a:not(.button){padding:14px 8px;border-bottom:1px solid var(--line);font-size:15px}
+ header nav .button{margin-top:17px;text-align:center;padding:13px 22px}
+}
+@media(min-width:961px){header nav{display:flex!important}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.menu-toggle span{transition:none}}
+
+/* Ajustes editoriales: rosa, marfil, dorado y marrón cacao */
+:root{--brown:#6D4E42;--ink:#392D2A;--taupe:#7E6961}
+.logo{color:var(--brown)}
+.service h3,.step strong{color:var(--brown)}
+.photo{background:#ead6d0;border:1px solid #E5D1C7;isolation:isolate}
+.photo:before{display:none}
+.photo::after{content:'IMAGEN EDITORIAL · CONCEPTO VISUAL';bottom:16px;letter-spacing:.1em;font-size:9px;color:var(--brown);max-width:calc(100% - 28px);text-align:center}
+.photo img{width:100%;height:100%;position:absolute;inset:0;object-fit:cover;object-position:center;display:block}
+.blush{background:linear-gradient(180deg,#F3E7E8 0%, #F7F0EB 100%)}
+.contact{border-color:#D9BCA6}
+@media(max-width:760px){.photo{min-height:440px}}
+
+/* Dermoblog */
+.blog-section{background:#faf6f2;border-block:1px solid #e9ddd8;scroll-margin-top:90px}
+.blog-heading{display:flex;align-items:end;justify-content:space-between;gap:24px;flex-wrap:wrap}
+.blog-heading p{max-width:560px;color:#806e66}
+.blog-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:23px;margin:35px 0}
+.blog-card{background:#fffdfb;border:1px solid #e8dad3;border-radius:20px;overflow:hidden;display:flex;flex-direction:column}
+.blog-art{height:145px;background:linear-gradient(125deg,#ead5d0,#bc8c77);position:relative;overflow:hidden}
+.blog-art:after{content:'';position:absolute;width:180px;height:180px;border:1px solid #ffffff91;border-radius:50%;right:12%;top:-40px;box-shadow:0 0 0 35px #ffffff19,0 0 0 70px #ffffff14}
+.blog-art.retinoides{background:linear-gradient(120deg,#dbbeb5,#8a6556)}
+.blog-art.barrera{background:linear-gradient(120deg,#f2e5dc,#bd997f)}
+.blog-art.solar{background:linear-gradient(120deg,#d7b394,#977156)}
+.blog-content{padding:26px;display:flex;flex-direction:column;gap:10px;flex:1}
+.blog-content h3{font:500 30px/1.1 'Cormorant Garamond',Georgia,serif;margin:0}
+.blog-content p{color:#806e66;font-size:14px;margin:0}
+.blog-label{font-size:11px;letter-spacing:.08em;font-weight:700;color:#896947;text-transform:uppercase}
+.blog-link{display:inline-block;margin-top:auto;padding-top:18px;color:#6e4935;text-decoration:underline;text-underline-offset:4px;font-size:13px;font-weight:600}
+.blog-footnote{font-size:12px;color:#806e66;max-width:880px}
+@media(max-width:720px){.blog-grid{grid-template-columns:1fr}.blog-art{height:105px}}
+
+/* Integración de logo Enfederma */
+.logo{display:flex;align-items:center;gap:14px;letter-spacing:0;font-size:0;line-height:1}
+.logo-stack{display:flex;flex-direction:column;gap:5px}
+.logo-image{display:block;height:44px;width:auto;object-fit:contain}
+.logo small{margin-left:2px;font-size:9px;letter-spacing:.30em;font-weight:600;color:var(--taupe)}
+header .wrap{gap:22px}
+footer .brand-mini{display:flex;align-items:center;gap:10px}
+.footer-logo{height:24px;width:auto;vertical-align:middle;opacity:.95}
+@media(max-width:760px){
+  .logo-image{height:35px}
+  .logo small{font-size:7px;letter-spacing:.22em}
+}
+
+
+/* Separadores minimalistas marrones entre bloques */
+#tratamientos,#skin-id,#dermoblog,#filosofia,#sobre-mi,#contacto{position:relative}
+#tratamientos::before,#skin-id::before,#dermoblog::before,#filosofia::before,#sobre-mi::before,#contacto::before{
+  content:"";
+  position:absolute;
+  top:0;
+  left:50%;
+  transform:translate(-50%,-50%);
+  width:min(220px,42vw);
+  height:22px;
+  background:
+    linear-gradient(to right, transparent 0, transparent 8%, rgba(109,78,66,.9) 8%, rgba(109,78,66,.9) 45%, transparent 45%, transparent 55%, rgba(109,78,66,.9) 55%, rgba(109,78,66,.9) 92%, transparent 92%, transparent 100%);
+  pointer-events:none;
+  opacity:.95;
+}
+#tratamientos::after,#skin-id::after,#dermoblog::after,#filosofia::after,#sobre-mi::after,#contacto::after{
+  content:"";
+  position:absolute;
+  top:0;
+  left:50%;
+  transform:translate(-50%,-50%);
+  width:9px;
+  height:9px;
+  border-radius:50%;
+  background:var(--brown);
+  box-shadow:0 0 0 4px rgba(248,244,239,.95);
+  pointer-events:none;
+}
+#tratamientos.section,#skin-id.section,#dermoblog.section,#filosofia.section,#sobre-mi.section,#contacto.wrap{padding-top:122px}
+.hero::after{box-shadow:0 8px 30px rgba(109,78,66,.08)}
+.service,.contact,.blog-card,.skin-id-art{position:relative}
+.service::after,.blog-card::after{
+  content:"";
+  position:absolute;
+  left:35px;
+  bottom:22px;
+  width:42px;
+  height:1px;
+  background:linear-gradient(90deg,var(--brown), transparent);
+  opacity:.55;
+}
+.contact::before{
+  content:"";
+  position:absolute;
+  top:22px;
+  left:50%;
+  transform:translateX(-50%);
+  width:84px;
+  height:1px;
+  background:linear-gradient(90deg, transparent, var(--brown), transparent);
+  opacity:.7;
+}
+@media(max-width:760px){
+  #tratamientos::before,#skin-id::before,#dermoblog::before,#filosofia::before,#sobre-mi::before,#contacto::before{width:min(150px,52vw)}
+  #tratamientos.section,#skin-id.section,#dermoblog.section,#filosofia.section,#sobre-mi.section,#contacto.wrap{padding-top:86px}
+}
+
+
+/* Hamburguesa de tres líneas visible desde Inicio en móvil, tablet y escritorio */
+header .menu-toggle{display:flex!important;flex-shrink:0;margin-left:auto}
+header nav,header nav:not(.is-open){display:none!important}
+header nav.is-open{display:flex!important;position:absolute;top:100%;left:auto;right:0;width:min(350px,calc(100vw - 32px));flex-direction:column;align-items:stretch;gap:0;padding:15px 22px 23px;background:var(--ivory);border:1px solid var(--line);border-radius:0 0 18px 18px;box-shadow:0 18px 32px rgba(47,42,40,.14);z-index:20}
+header nav.is-open a:not(.button){display:block;padding:13px 5px;border-bottom:1px solid var(--line);font-size:14px}
+header nav.is-open .button{display:block;margin-top:17px;text-align:center}
+@media(max-width:760px){header nav.is-open{right:0;left:auto}}
+
+.subpage{min-height:70vh;padding:76px 0 100px}.subpage h1{font:500 clamp(46px,6vw,82px)/1.05 'Cormorant Garamond',Georgia,serif;margin:12px 0 22px}.subpage p{max-width:770px;color:var(--taupe);font-size:16px}.subpage article{margin-top:28px;padding:32px;background:#fffdfb;border:1px solid var(--line);border-radius:20px}.subpage h2{font-size:38px}.subpage ul{line-height:2;color:var(--ink)}.source{font-size:13px;color:var(--brown)}.disclaimer{font-size:13px!important;padding-top:20px;border-top:1px solid var(--line)}@media(max-width:650px){.subpage{padding:45px 0 70px}.subpage article{padding:22px}}
+.logo-image{height:42px!important;width:185px!important;object-fit:contain!important;object-position:left center!important}.logo{flex-shrink:0!important}.logo-stack{gap:0!important}.logo small{font-size:8px!important;letter-spacing:.19em!important;margin-left:0!important}.footer-logo{height:24px!important;width:120px!important;object-fit:contain!important;object-position:left center!important}@media(max-width:600px){.logo-image{height:33px!important;width:153px!important}.logo small{font-size:7px!important;letter-spacing:.11em!important}}
+</style><style>
+/* Menu nativo, funcional sin JavaScript */
+header .wrap{position:relative;overflow:visible!important}
+header .hamburger-shell{position:relative;margin-left:auto;flex-shrink:0;z-index:150}
+header .hamburger-trigger{width:48px;height:46px;display:flex;align-items:center;justify-content:center;cursor:pointer;border:1px solid #d7c5b9;border-radius:12px;background:#fbf7f3;color:#6D4E42;list-style:none;user-select:none;-webkit-tap-highlight-color:transparent}
+header .hamburger-trigger::-webkit-details-marker{display:none}
+header .hamburger-trigger::marker{content:''}
+header .hamburger-trigger:focus-visible{outline:3px solid #C8A46A;outline-offset:3px}
+header .hamburger-bars{display:flex;flex-direction:column;gap:5px}
+header .hamburger-bars i{width:23px;height:2px;background:currentColor;border-radius:5px;display:block;transition:transform .2s,opacity .2s}
+header details[open] .hamburger-bars i:first-child{transform:translateY(7px) rotate(45deg)}
+header details[open] .hamburger-bars i:nth-child(2){opacity:0}
+header details[open] .hamburger-bars i:last-child{transform:translateY(-7px) rotate(-45deg)}
+header .hamburger-panel{display:none!important;position:absolute;top:calc(100% + 9px);right:0;left:auto;width:min(355px,calc(100vw - 28px));max-height:calc(100dvh - 95px);overflow-y:auto;background:#F8F4EF;padding:12px 18px 20px;border:1px solid #e4d7cd;border-radius:17px;box-shadow:0 18px 38px #392d2a33;z-index:9999}
+header details[open] .hamburger-panel{display:flex!important;flex-direction:column;gap:0}
+header .hamburger-panel a:not(.button){display:block;padding:12px 9px;font-size:14px;border-bottom:1px solid #e9ddd8;color:#392D2A}
+header .hamburger-panel a.nav-subitem:not(.button){font-size:12px;padding-left:25px;color:#6D4E42}
+header .hamburger-panel a.button{display:block;margin-top:16px;text-align:center}
+header .hamburger-panel a:focus-visible{outline:2px solid #C8A46A;outline-offset:2px}
+@media(max-width:600px){header .hamburger-trigger{width:44px;height:44px}header .hamburger-panel{right:-2px;width:min(355px,calc(100vw - 32px))}}
+@media(prefers-reduced-motion:reduce){header .hamburger-bars i{transition:none}}
+</style></head><body><header><div class="wrap"><a class="logo" href="index.html"><span class="logo-stack"><img alt="Enfederma" class="logo-image" src="enfederma-logo.png"/><small>ENFERMERÍA DERMOESTÉTICA</small></span></a><details class="hamburger-shell"><summary aria-label="Abrir o cerrar menú de navegación" class="hamburger-trigger"><span aria-hidden="true" class="hamburger-bars"><i></i><i></i><i></i></span></summary><div aria-label="Navegación principal" class="hamburger-panel"><a class="" href="index.html#inicio">Inicio</a><a class="" href="index.html#tratamientos">Servicios</a><a class="nav-subitem" href="valoracion-piel.html">Valoración de la piel</a><a class="nav-subitem" href="cuidado-dermoestetico.html">Cuidado dermoestético</a><a class="nav-subitem" href="acompanamiento.html">Acompañamiento</a><a class="" href="skin-id.html">SKIN ID · Test</a><a class="" href="dermoblog.html">Dermoblog</a><a class="" href="index.html#filosofia">Filosofía</a><a class="" href="index.html#sobre-mi">Sobre mí</a><a class="button" href="index.html#contacto">Contacto</a></div></details></div></header><main class="wrap subpage"><span class="eyebrow">Nuestros servicios</span><h1>Valoración de la piel</h1><p>Un espacio inicial para escuchar tus necesidades, conocer tus hábitos y orientar el cuidado de la piel desde un enfoque sanitario individualizado.</p><article><h2>¿En qué consiste?</h2><p>Se revisan objetivos, rutina cosmética, antecedentes relevantes y posibles señales que requieran valoración médica. Las recomendaciones se adaptan al caso y a las competencias de la enfermera responsable.</p><p class="disclaimer">Descripción informativa provisional. No incluye diagnóstico automatizado ni sustituye una consulta presencial.</p></article><p style="margin-top:45px"><a class="button outline" href="index.html#tratamientos">← Volver a Enfederma</a></p></main><footer class="wrap footer"><span>© Enfederma · Enfermería dermoestética</span><span>Información orientativa · Pendiente de validación profesional</span></footer></body></html>
