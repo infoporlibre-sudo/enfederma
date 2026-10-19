@@ -279,6 +279,23 @@ header nav a.button{margin-top:12px;text-align:center}
   .side-reveal{display:none}
 }
 
+
+/* Adaptación integral a móvil, tablet, portátil y escritorio amplio — 2026-10-19 */
+html,body{max-width:100%;overflow-x:clip}
+img{max-width:100%}
+.wrap{width:min(1160px,calc(100% - 44px))}
+.hero{min-width:0}
+.hero>div{min-width:0}
+.hero .photo{width:100%;max-width:100%;height:auto;aspect-ratio:4/5;min-height:0}
+.hero .photo img{position:static;width:100%;height:100%;object-fit:contain;object-position:center}
+.hero .actions{display:flex;gap:14px;align-items:stretch}
+.hero .lux-btn{min-width:0;max-width:100%;justify-content:center;text-align:center}
+@media(min-width:1500px){.wrap{width:min(1280px,calc(100% - 100px))}.hero{gap:8%;min-height:720px}.hero h1{font-size:clamp(62px,5vw,94px)}}
+@media(min-width:981px) and (max-width:1249px){.hero{gap:4%;grid-template-columns:minmax(0,1fr) minmax(0,.95fr)}.hero h1{font-size:clamp(52px,5vw,72px)}.side-reveal{display:none}}
+@media(min-width:761px) and (max-width:980px){.wrap{width:calc(100% - 52px)}.hero{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:28px;min-height:auto;padding:72px 0}.hero h1{font-size:clamp(45px,5.4vw,63px)}.hero .actions{flex-direction:column}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.blog-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.skin-id-inner,.split{gap:7%}}
+@media(max-width:760px){.wrap{width:calc(100% - 36px)}header .wrap{min-height:66px}.hero{display:flex;flex-direction:column;gap:32px;min-height:auto;padding:46px 0 60px}.hero h1{font-size:clamp(44px,10.5vw,61px);line-height:1.05}.hero .photo{width:100%;height:auto;aspect-ratio:auto;min-height:0;border-radius:190px 190px 20px 20px}.hero .photo img{position:relative;display:block;width:100%;height:auto;object-fit:contain}.hero .actions{width:100%;display:grid;grid-template-columns:1fr;gap:12px}.hero .lux-btn{width:100%;min-height:54px}.section{padding:70px 0}.grid,.blog-grid,.split,.skin-id-inner{grid-template-columns:1fr;gap:20px}.side-reveal{display:none!important}section[id]{scroll-margin-top:80px}.footer{flex-direction:column}}
+@media(max-width:420px){.wrap{width:calc(100% - 28px)}.hero{padding-top:32px}.hero h1{font-size:clamp(39px,11vw,48px)}.service{padding:26px}.skin-id-info h2{font-size:70px}}
+@media(prefers-reduced-motion:reduce){.side-reveal,.lux-btn{animation:none!important;transition:none!important}}
 </style>
 <style>
 /* Enfederma · dirección fotográfica editorial */
