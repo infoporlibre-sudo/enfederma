@@ -1,4 +1,4 @@
-/* EF · Un único chat conversacional. Servicio externo claramente identificado. */
+/* EF · Ventana propia de Enfederma. Sin redirecciones ni servicios externos no configurados. */
 (() => {
   if(document.getElementById('ef-chat-launcher')) return;
   const css=`
@@ -21,16 +21,11 @@
   const style=document.createElement('style');style.textContent=css;document.head.append(style);
   const panel=document.createElement('section');
   panel.id='ef-chat-panel';panel.setAttribute('role','dialog');panel.setAttribute('aria-label','EF Chat');
-  panel.innerHTML=`<div class="ef-header"><div><strong>EF Chat</strong><small>Tu espacio para conversar · Acceso gratuito</small></div><button type="button" class="ef-close" aria-label="Cerrar chat">×</button></div><div class="ef-intro"><p><strong>Pregunta con tus propias palabras.</strong> Sobre Enfederma, cosmética o cuidado de la piel, sin cuestionarios.</p><p>La IA es un servicio externo general, no una enfermera ni una herramienta clínica validada. Puede equivocarse y no garantiza bibliografía médica. <a href="dermoblog.html">Artículos de Enfederma</a>.</p></div><div class="ef-chat-main"><div class="ef-consent"><p><strong>Chat de IA externo</strong></p><p>Al continuar se abrirá Free.ai dentro de esta ventana. No compartas datos personales, fotos ni información de salud privada.</p><button type="button" id="ef-start">Iniciar conversación</button></div></div><div class="ef-fallback">Si el chat no se muestra: <a href="https://free.ai/" target="_blank" rel="noopener noreferrer">abrir IA en otra pestaña ↗</a></div>`;
+  panel.innerHTML=`<div class="ef-header"><div><strong>EF Chat</strong><small>Asistente de Enfederma · Acceso libre</small></div><button type="button" class="ef-close" aria-label="Cerrar chat">×</button></div><div class="ef-intro"><p><strong>Un único espacio de conversación.</strong> Sin cuestionarios ni páginas externas.</p></div><div class="ef-chat-main"><div class="ef-consent"><p><strong>EF está preparando sus respuestas inteligentes.</strong></p><p>La conexión con el motor de IA todavía no está disponible. Cuando se active, podrás preguntar aquí mismo sin salir de Enfederma.</p><p>No compartas datos médicos personales en este chat.</p></div></div>`;
   const launcher=document.createElement('button');launcher.type='button';launcher.id='ef-chat-launcher';launcher.textContent='EF';launcher.setAttribute('aria-label','Abrir EF Chat');launcher.setAttribute('aria-controls','ef-chat-panel');launcher.setAttribute('aria-expanded','false');
   document.body.append(panel,launcher);
   function close(){panel.classList.remove('open');launcher.setAttribute('aria-expanded','false');launcher.focus()}
   launcher.addEventListener('click',()=>{const show=!panel.classList.contains('open');panel.classList.toggle('open',show);launcher.setAttribute('aria-expanded',String(show));if(show)panel.querySelector('.ef-close').focus()});
   panel.querySelector('.ef-close').addEventListener('click',close);
   document.addEventListener('keydown',e=>{if(e.key==='Escape'&&panel.classList.contains('open'))close()});
-  panel.querySelector('#ef-start').addEventListener('click',()=>{
-    const main=panel.querySelector('.ef-chat-main');main.replaceChildren();
-    const iframe=document.createElement('iframe');iframe.title='Asistente de inteligencia artificial externo';iframe.src='https://free.ai/embed/chat/';iframe.referrerPolicy='no-referrer';iframe.setAttribute('allow','clipboard-write');
-    main.append(iframe);
-  });
 })();
