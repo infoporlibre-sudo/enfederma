@@ -15,7 +15,7 @@
  .ef-choice:hover{background:#f7ece9;border-color:#c8a46a}
  .ef-answer{margin-top:14px;padding:14px;background:#f8f4ef;border-radius:13px}
  .ef-answer a{color:#60453c;text-decoration:underline}
- .ef-form{padding:13px 20px;border-top:1px solid #e6d6cc;background:#fffaf7}.ef-form label{display:block;margin-bottom:8px;font-weight:600}.ef-form textarea{width:100%;box-sizing:border-box;resize:vertical;min-height:65px;border:1px solid #dcc8c2;border-radius:10px;padding:10px;font:inherit;background:#fff}.ef-form button{margin-top:8px;background:#60453c;color:white;border:0;padding:10px 16px;border-radius:9px;font:inherit;cursor:pointer}.ef-form button:disabled{opacity:.5;cursor:not-allowed}.ef-response{white-space:pre-wrap;margin-top:12px;max-height:160px;overflow:auto}.ef-sources a{display:block;text-decoration:underline;color:#60453c;overflow-wrap:anywhere}
+ .ef-form[hidden]{display:none!important} .ef-form{padding:13px 20px;border-top:1px solid #e6d6cc;background:#fffaf7}.ef-form label{display:block;margin-bottom:8px;font-weight:600}.ef-form textarea{width:100%;box-sizing:border-box;resize:vertical;min-height:65px;border:1px solid #dcc8c2;border-radius:10px;padding:10px;font:inherit;background:#fff}.ef-form button{margin-top:8px;background:#60453c;color:white;border:0;padding:10px 16px;border-radius:9px;font:inherit;cursor:pointer}.ef-form button:disabled{opacity:.5;cursor:not-allowed}.ef-response{white-space:pre-wrap;margin-top:12px;max-height:160px;overflow:auto}.ef-sources a{display:block;text-decoration:underline;color:#60453c;overflow-wrap:anywhere}
  .ef-premium{padding:15px 20px;background:#f7eeed;border-top:1px solid #e6d6cc}
  .ef-premium strong{display:block;color:#60453c}.ef-premium p{margin:5px 0;font-size:12px;color:#7e6961}
  .ef-premium span{display:inline-block;margin-top:5px;font-size:11px;letter-spacing:.05em;color:#967d69}
@@ -42,7 +42,7 @@
  const submit=panel.querySelector('#ef-science-submit');
  const result=panel.querySelector('#ef-science-response');
  const sources=panel.querySelector('#ef-science-sources');
- if(!API_URL){submit.disabled=true;result.textContent='La consulta científica aún requiere conectar el servidor seguro. Mientras tanto puedes usar las respuestas sobre Enfederma.';}
+ if(!API_URL){form.hidden=true;}
  form.addEventListener('submit',async e=>{
    e.preventDefault(); if(!API_URL)return;
    submit.disabled=true; result.textContent='Consultando bibliografía científica…'; sources.replaceChildren();
@@ -57,6 +57,26 @@
      }
    }catch{result.textContent='El servicio científico no está disponible en este momento. Inténtalo más tarde.'}
    finally{submit.disabled=false}
+ });
+ // IA conversacional de terceros: activación voluntaria; no se carga hasta aceptar.
+ const external=document.createElement('div');external.className='ef-form';external.id='ef-external';
+ external.innerHTML='<strong>Preguntar a una IA · Acceso gratuito</strong><p style="margin:8px 0;font-size:12px">Servicio externo de IA general, no supervisado clínicamente por Enfederma. Sus respuestas pueden contener errores y no se garantiza que consulte bibliografía médica. No compartas nombres, fotos, historial médico ni información personal o de salud.</p><button type="button" id="ef-open-external" style="background:#60453c;color:#fff;border:0;border-radius:9px;padding:11px 15px;cursor:pointer">Entiendo y abrir chat gratuito</button>';
+ form.after(external);
+ external.querySelector('#ef-open-external').addEventListener('click',()=>{
+   external.replaceChildren();
+   const notice=document.createElement('p');notice.textContent='Estás utilizando un chat externo de Free.ai, independiente de Enfederma. La información es educativa y no sustituye la valoración sanitaria.';
+   const frame=document.createElement('iframe');
+   frame.src='https://free.ai/embed/chat/';
+   frame.title='Chat de inteligencia artificial externo Free.ai';
+   frame.loading='lazy';
+   frame.referrerPolicy='no-referrer';
+   frame.setAttribute('allow','clipboard-write');
+   frame.style.cssText='border:0;width:100%;height:min(410px,48dvh);min-height:280px;border-radius:10px;background:white';
+   const research=document.createElement('a');
+   research.textContent='Consultar estudios originales en PubMed ↗';
+   research.href='https://pubmed.ncbi.nlm.nih.gov/';
+   research.target='_blank';research.rel='noopener noreferrer';
+   external.append(notice,frame,research);
  });
  qa.forEach(([q,a])=>{const btn=document.createElement('button');btn.className='ef-choice';btn.type='button';btn.textContent=q;btn.addEventListener('click',()=>{answer.innerHTML=a;answer.hidden=false});choices.appendChild(btn)});
 })();
