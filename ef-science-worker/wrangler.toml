@@ -1,0 +1,5 @@
+name = "enfederma-ef-science"
+main = "worker.js"
+compatibility_date = "2026-10-20"
+# Secret: OPENAI_API_KEY (set via wrangler secret put OPENAI_API_KEY)
+# Optional variable OPENAI_MODEL can be set through the Cloudflare dashboard.
