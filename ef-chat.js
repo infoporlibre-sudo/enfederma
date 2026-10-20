@@ -1,7 +1,7 @@
 /* EF Chat: single-page conversation shell. AI requires a configured secure server. */
 (()=> {
  if(document.getElementById('ef-chat-launcher'))return;
- const ENDPOINT=''; // HTTPS backend URL; never insert OpenAI API keys here
+ const ENDPOINT=window.ENFEDERMA_EF_ENDPOINT || ''; // Configurable HTTPS server URL, never expose an API key
  const style=document.createElement('style');
  style.textContent=`
  #ef-chat-launcher{position:fixed;bottom:20px;right:20px;z-index:9101;background:#60453c;color:white;width:60px;height:60px;border:1px solid #c8a46a;border-radius:50%;box-shadow:0 12px 35px #392d2a40;font:600 21px Georgia,serif;cursor:pointer}
@@ -29,6 +29,7 @@
  panel.querySelector('.ef-close').addEventListener('click',close);
  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&panel.classList.contains('open'))close()});
  field.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();form.requestSubmit()}});
+ if(!ENDPOINT){add('Estado: IA sin conectar. El chat necesita un servidor privado para ofrecer respuestas reales y documentadas.','agent')}
  const history=[];
  form.addEventListener('submit',async e=>{
   e.preventDefault();const question=field.value.trim();if(!question)return;
