@@ -1,31 +1,41 @@
-/* EF · Ventana propia de Enfederma. Sin redirecciones ni servicios externos no configurados. */
-(() => {
-  if(document.getElementById('ef-chat-launcher')) return;
-  const css=`
-  #ef-chat-launcher{position:fixed;bottom:20px;right:20px;z-index:9001;width:62px;height:62px;border-radius:50%;border:1px solid #c8a46a;background:#60453c;color:white;box-shadow:0 15px 36px #392d2a35;font:600 21px Georgia,serif;cursor:pointer}
-  #ef-chat-panel{position:fixed;bottom:96px;right:20px;z-index:9000;display:none;flex-direction:column;width:min(440px,calc(100vw - 24px));height:min(670px,calc(100dvh - 118px));background:#fffaf7;border:1px solid #decfc5;border-radius:22px;overflow:hidden;box-shadow:0 25px 70px #392d2a32;color:#392d2a;font:14px/1.5 'DM Sans',Arial,sans-serif}
-  #ef-chat-panel.open{display:flex}
-  .ef-header{flex-shrink:0;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:16px 19px;background:#f3e7e8}
-  .ef-header strong{font:500 26px Georgia,serif;color:#60453c}.ef-header small{display:block;color:#7e6961;font-size:11px}
-  .ef-close{color:#60453c;background:transparent;border:0;font-size:25px;cursor:pointer}
-  .ef-intro{padding:13px 17px;font-size:12px;color:#665650;background:#fffaf7;border-bottom:1px solid #eaded5}
-  .ef-intro p{margin:0 0 7px}.ef-intro a{color:#60453c;text-decoration:underline}
-  .ef-chat-main{flex:1;min-height:0;display:flex;flex-direction:column}
-  .ef-consent{padding:22px;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:12px;flex:1}
-  .ef-consent p{margin:0}.ef-consent button{border:0;border-radius:10px;padding:12px 18px;background:#60453c;color:#fff;font:inherit;cursor:pointer}
-  .ef-chat-main iframe{border:0;width:100%;height:100%;min-height:0;background:#fff;flex:1}
-  .ef-fallback{font-size:12px;padding:9px 15px;background:#f8f4ef}.ef-fallback a{color:#60453c;text-decoration:underline}
-  #ef-chat-launcher:focus-visible,.ef-close:focus-visible,.ef-consent button:focus-visible{outline:3px solid #c8a46a;outline-offset:3px}
-  @media(max-width:600px){#ef-chat-launcher{right:13px;bottom:13px;width:56px;height:56px}#ef-chat-panel{right:8px;bottom:79px;width:calc(100vw - 16px);height:calc(100dvh - 99px);border-radius:18px}}
-  `;
-  const style=document.createElement('style');style.textContent=css;document.head.append(style);
-  const panel=document.createElement('section');
-  panel.id='ef-chat-panel';panel.setAttribute('role','dialog');panel.setAttribute('aria-label','EF Chat');
-  panel.innerHTML=`<div class="ef-header"><div><strong>EF Chat</strong><small>Asistente de Enfederma · Acceso libre</small></div><button type="button" class="ef-close" aria-label="Cerrar chat">×</button></div><div class="ef-intro"><p><strong>Un único espacio de conversación.</strong> Sin cuestionarios ni páginas externas.</p></div><div class="ef-chat-main"><div class="ef-consent"><p><strong>EF está preparando sus respuestas inteligentes.</strong></p><p>La conexión con el motor de IA todavía no está disponible. Cuando se active, podrás preguntar aquí mismo sin salir de Enfederma.</p><p>No compartas datos médicos personales en este chat.</p></div></div>`;
-  const launcher=document.createElement('button');launcher.type='button';launcher.id='ef-chat-launcher';launcher.textContent='EF';launcher.setAttribute('aria-label','Abrir EF Chat');launcher.setAttribute('aria-controls','ef-chat-panel');launcher.setAttribute('aria-expanded','false');
-  document.body.append(panel,launcher);
-  function close(){panel.classList.remove('open');launcher.setAttribute('aria-expanded','false');launcher.focus()}
-  launcher.addEventListener('click',()=>{const show=!panel.classList.contains('open');panel.classList.toggle('open',show);launcher.setAttribute('aria-expanded',String(show));if(show)panel.querySelector('.ef-close').focus()});
-  panel.querySelector('.ef-close').addEventListener('click',close);
-  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&panel.classList.contains('open'))close()});
+/* EF Chat: single-page conversation shell. AI requires a configured secure server. */
+(()=> {
+ if(document.getElementById('ef-chat-launcher'))return;
+ const ENDPOINT=''; // HTTPS backend URL; never insert OpenAI API keys here
+ const style=document.createElement('style');
+ style.textContent=`
+ #ef-chat-launcher{position:fixed;bottom:20px;right:20px;z-index:9101;background:#60453c;color:white;width:60px;height:60px;border:1px solid #c8a46a;border-radius:50%;box-shadow:0 12px 35px #392d2a40;font:600 21px Georgia,serif;cursor:pointer}
+ #ef-chat-panel{position:fixed;bottom:92px;right:20px;z-index:9100;width:min(425px,calc(100vw - 24px));height:min(620px,calc(100dvh - 112px));display:none;flex-direction:column;background:#fffaf7;color:#392d2a;border:1px solid #dcc8c2;border-radius:20px;box-shadow:0 22px 65px #392d2a38;overflow:hidden;font:14px/1.5 Arial,sans-serif}
+ #ef-chat-panel.open{display:flex}
+ .ef-head{display:flex;align-items:center;justify-content:space-between;background:#f3e7e8;padding:15px 18px;flex-shrink:0}.ef-head strong{font:500 25px Georgia,serif}.ef-head small{display:block;color:#806b61;font-size:11px}.ef-close{background:transparent;border:0;font-size:24px;cursor:pointer;color:#60453c}
+ .ef-messages{padding:18px;overflow:auto;flex:1;display:flex;flex-direction:column;gap:12px;min-height:0}
+ .ef-message{padding:12px 14px;border-radius:15px;max-width:91%;white-space:pre-wrap;overflow-wrap:anywhere}.ef-agent{align-self:flex-start;background:#f3e7e8}.ef-user{align-self:flex-end;background:#60453c;color:white}
+ .ef-composer{display:flex;gap:8px;align-items:flex-end;padding:12px;border-top:1px solid #e7dad2;background:#fffaf7;flex-shrink:0}
+ .ef-composer textarea{font:inherit;flex:1;resize:none;min-height:44px;max-height:120px;padding:12px;border-radius:12px;border:1px solid #d6c6bd;background:white;color:#392d2a}
+ .ef-send{border:0;border-radius:12px;background:#60453c;color:white;padding:12px 15px;cursor:pointer;font:inherit}.ef-send:disabled{opacity:.6;cursor:not-allowed}
+ .ef-note{font-size:11px;padding:6px 14px 10px;color:#7e6961;background:#fffaf7}
+ #ef-chat-launcher:focus-visible,.ef-close:focus-visible,.ef-send:focus-visible{outline:3px solid #c8a46a;outline-offset:3px}
+ @media(max-width:600px){#ef-chat-launcher{right:12px;bottom:12px;width:56px;height:56px}#ef-chat-panel{right:8px;bottom:77px;width:calc(100vw - 16px);height:calc(100dvh - 96px);border-radius:17px}}
+ `;document.head.append(style);
+ const panel=document.createElement('section');panel.id='ef-chat-panel';panel.setAttribute('role','dialog');panel.setAttribute('aria-label','Chat de Enfederma');
+ panel.innerHTML=`<div class="ef-head"><div><strong>EF Chat</strong><small>Asistente virtual · Enfederma</small></div><button class="ef-close" type="button" aria-label="Cerrar chat">×</button></div><div class="ef-messages" role="log" aria-live="polite" aria-relevant="additions text"></div><form class="ef-composer"><textarea rows="1" aria-label="Escribe tu mensaje" maxlength="1500" placeholder="Escribe tu pregunta..." required></textarea><button class="ef-send" type="submit">Enviar</button></form><div class="ef-note">Información educativa, no diagnóstico ni consulta sanitaria. No compartas datos médicos privados.</div>`;
+ const trigger=document.createElement('button');trigger.type='button';trigger.id='ef-chat-launcher';trigger.textContent='EF';trigger.setAttribute('aria-label','Abrir EF Chat');trigger.setAttribute('aria-controls','ef-chat-panel');trigger.setAttribute('aria-expanded','false');
+ document.body.append(panel,trigger);
+ const log=panel.querySelector('.ef-messages'),form=panel.querySelector('form'),field=panel.querySelector('textarea'),send=panel.querySelector('.ef-send');
+ function add(msg,who){const bubble=document.createElement('div');bubble.className='ef-message '+(who==='user'?'ef-user':'ef-agent');bubble.textContent=msg;log.append(bubble);log.scrollTop=log.scrollHeight;return bubble}
+ add('Hola, soy EF. Puedes escribir directamente tu pregunta. La conexión de inteligencia artificial todavía necesita configurarse en el servidor de Enfederma.','agent');
+ function close(){panel.classList.remove('open');trigger.setAttribute('aria-expanded','false');trigger.focus()}
+ trigger.addEventListener('click',()=>{const open=!panel.classList.contains('open');panel.classList.toggle('open',open);trigger.setAttribute('aria-expanded',String(open));if(open)field.focus()});
+ panel.querySelector('.ef-close').addEventListener('click',close);
+ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&panel.classList.contains('open'))close()});
+ field.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();form.requestSubmit()}});
+ const history=[];
+ form.addEventListener('submit',async e=>{
+  e.preventDefault();const question=field.value.trim();if(!question)return;
+  add(question,'user');field.value='';
+  if(!ENDPOINT){add('Todavía no puedo responder con IA: falta conectar un servidor seguro con el modelo. El chat ya está preparado, pero prefiero indicártelo a inventar una respuesta.','agent');return}
+  send.disabled=true;const pending=add('Consultando fuentes y preparando respuesta…','agent');
+  try{const res=await fetch(ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question,history:history.slice(-8)})});if(!res.ok)throw Error('Service error');const data=await res.json();if(!data||typeof data.answer!=='string')throw Error('Invalid answer');pending.textContent=data.answer;history.push({role:'user',content:question},{role:'assistant',content:data.answer});if(Array.isArray(data.citations)&&data.citations.length){const links=document.createElement('div');links.className='ef-message ef-agent';for(const c of data.citations.slice(0,5)){try{const url=new URL(c.url);if(url.protocol!=='https:')continue;const a=document.createElement('a');a.href=url.href;a.target='_blank';a.rel='noopener noreferrer';a.textContent=c.title||url.hostname;links.append(a,document.createElement('br'))}catch{}}log.append(links)}}
+  catch{pending.textContent='No se ha podido conectar con la IA. Inténtalo más tarde.'}finally{send.disabled=false;log.scrollTop=log.scrollHeight}
+ });
 })();
