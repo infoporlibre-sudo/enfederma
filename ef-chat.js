@@ -23,7 +23,7 @@
  document.body.append(panel,trigger);
  const log=panel.querySelector('.ef-messages'),form=panel.querySelector('form'),field=panel.querySelector('textarea'),send=panel.querySelector('.ef-send');
  function add(msg,who){const bubble=document.createElement('div');bubble.className='ef-message '+(who==='user'?'ef-user':'ef-agent');bubble.textContent=msg;log.append(bubble);log.scrollTop=log.scrollHeight;return bubble}
- add('Hola, soy EF. Puedes escribir directamente tu pregunta. Escribe tu pregunta y consultaré fuentes para darte una respuesta informativa.','agent');
+ add('¡Hola! Soy EF 😊 ¿En qué puedo ayudarte con tu piel o tus cuidados?','agent');
  function close(){panel.classList.remove('open');trigger.setAttribute('aria-expanded','false');trigger.focus()}
  trigger.addEventListener('click',()=>{const open=!panel.classList.contains('open');panel.classList.toggle('open',open);trigger.setAttribute('aria-expanded',String(open));if(open)field.focus()});
  panel.querySelector('.ef-close').addEventListener('click',close);
@@ -35,8 +35,8 @@
   e.preventDefault();const question=field.value.trim();if(!question)return;
   add(question,'user');field.value='';
   if(!ENDPOINT){add('Todavía no puedo responder con IA: falta conectar un servidor seguro con el modelo. El chat ya está preparado, pero prefiero indicártelo a inventar una respuesta.','agent');return}
-  send.disabled=true;const pending=add('Consultando fuentes y preparando respuesta…','agent');
-  try{const res=await fetch(ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:question})});if(!res.ok)throw Error('Service error');const data=await res.json();if(!data||typeof data.answer!=='string')throw Error('Invalid answer');pending.textContent=data.answer;history.push({role:'user',content:question},{role:'assistant',content:data.answer});/* Referencias conservadas en la respuesta API; no se muestran automáticamente. */}
+  send.disabled=true;const pending=add('Estoy preparando tu respuesta…','agent');
+  try{const res=await fetch(ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:question})});if(!res.ok)throw Error('Service error');const data=await res.json();if(!data||typeof data.answer!=='string')throw Error('Invalid answer');pending.textContent=data.answer.replace(/\[([^\]]+)\]\(https?:\/\/[^)]+\)/g,'$1').replace(/https?:\/\/\S+/g,'').replace(/(?:^|\n)\s*(?:Fuentes|Referencias|Bibliografía|Sources):?[\s\S]*$/i,'').trim();history.push({role:'user',content:question},{role:'assistant',content:data.answer});/* Referencias conservadas en la respuesta API; no se muestran automáticamente. */}
   catch{pending.textContent='No se ha podido conectar con la IA. Inténtalo más tarde.'}finally{send.disabled=false;log.scrollTop=log.scrollHeight}
  });
 })();
