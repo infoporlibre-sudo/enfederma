@@ -1,7 +1,7 @@
 /* EF Chat: single-page conversation shell. AI requires a configured secure server. */
 (()=> {
  if(document.getElementById('ef-chat-launcher'))return;
- const ENDPOINT=window.ENFEDERMA_EF_ENDPOINT || ''; // Configurable HTTPS server URL, never expose an API key
+ const ENDPOINT='https://enfederma-ef-science.lovable.app/api/chat'; // Managed Lovable AI backend
  const style=document.createElement('style');
  style.textContent=`
  #ef-chat-launcher{position:fixed;bottom:20px;right:20px;z-index:9101;background:#60453c;color:white;width:60px;height:60px;border:1px solid #c8a46a;border-radius:50%;box-shadow:0 12px 35px #392d2a40;font:600 21px Georgia,serif;cursor:pointer}
@@ -23,20 +23,20 @@
  document.body.append(panel,trigger);
  const log=panel.querySelector('.ef-messages'),form=panel.querySelector('form'),field=panel.querySelector('textarea'),send=panel.querySelector('.ef-send');
  function add(msg,who){const bubble=document.createElement('div');bubble.className='ef-message '+(who==='user'?'ef-user':'ef-agent');bubble.textContent=msg;log.append(bubble);log.scrollTop=log.scrollHeight;return bubble}
- add('Hola, soy EF. Puedes escribir directamente tu pregunta. La conexión de inteligencia artificial todavía necesita configurarse en el servidor de Enfederma.','agent');
+ add('Hola, soy EF. Puedes escribir directamente tu pregunta. Escribe tu pregunta y consultaré fuentes para darte una respuesta informativa.','agent');
  function close(){panel.classList.remove('open');trigger.setAttribute('aria-expanded','false');trigger.focus()}
  trigger.addEventListener('click',()=>{const open=!panel.classList.contains('open');panel.classList.toggle('open',open);trigger.setAttribute('aria-expanded',String(open));if(open)field.focus()});
  panel.querySelector('.ef-close').addEventListener('click',close);
  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&panel.classList.contains('open'))close()});
  field.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();form.requestSubmit()}});
- if(!ENDPOINT){add('Estado: IA sin conectar. El chat necesita un servidor privado para ofrecer respuestas reales y documentadas.','agent')}
+
  const history=[];
  form.addEventListener('submit',async e=>{
   e.preventDefault();const question=field.value.trim();if(!question)return;
   add(question,'user');field.value='';
   if(!ENDPOINT){add('Todavía no puedo responder con IA: falta conectar un servidor seguro con el modelo. El chat ya está preparado, pero prefiero indicártelo a inventar una respuesta.','agent');return}
   send.disabled=true;const pending=add('Consultando fuentes y preparando respuesta…','agent');
-  try{const res=await fetch(ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question,history:history.slice(-8)})});if(!res.ok)throw Error('Service error');const data=await res.json();if(!data||typeof data.answer!=='string')throw Error('Invalid answer');pending.textContent=data.answer;history.push({role:'user',content:question},{role:'assistant',content:data.answer});if(Array.isArray(data.citations)&&data.citations.length){const links=document.createElement('div');links.className='ef-message ef-agent';for(const c of data.citations.slice(0,5)){try{const url=new URL(c.url);if(url.protocol!=='https:')continue;const a=document.createElement('a');a.href=url.href;a.target='_blank';a.rel='noopener noreferrer';a.textContent=c.title||url.hostname;links.append(a,document.createElement('br'))}catch{}}log.append(links)}}
+  try{const res=await fetch(ENDPOINT,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:question})});if(!res.ok)throw Error('Service error');const data=await res.json();if(!data||typeof data.answer!=='string')throw Error('Invalid answer');pending.textContent=data.answer;history.push({role:'user',content:question},{role:'assistant',content:data.answer});if(Array.isArray(data.citations)&&data.citations.length){const links=document.createElement('div');links.className='ef-message ef-agent';for(const c of data.citations.slice(0,5)){try{const url=new URL(c.url);if(url.protocol!=='https:')continue;const a=document.createElement('a');a.href=url.href;a.target='_blank';a.rel='noopener noreferrer';a.textContent=c.title||url.hostname;links.append(a,document.createElement('br'))}catch{}}log.append(links)}}
   catch{pending.textContent='No se ha podido conectar con la IA. Inténtalo más tarde.'}finally{send.disabled=false;log.scrollTop=log.scrollHeight}
  });
 })();
