@@ -16,9 +16,14 @@ const photo=stage?.querySelector('img');
 const btns=[...document.querySelectorAll('[data-mannequin]')];
 if(!stage||!holder||!status) throw new Error('No se encuentra el visor de Enfederma.');
 const coords={
-  frente:[.5,.81], entrecejo:[.5,.62], ojos:[.31,.57], pomulos:[.28,.45],
-  mejillas:[.73,.41], nariz:[.5,.49], labio:[.5,.34], menton:[.5,.20],
-  mandibula:[.76,.16], sienes:[.15,.65], escote:[.5,-.22]
+  frente:[[.5,.81]], entrecejo:[[.5,.62]],
+  ojos:[[.31,.57],[.69,.57]],
+  pomulos:[[.28,.45],[.72,.45]],
+  mejillas:[[.27,.41],[.73,.41]],
+  nariz:[[.5,.49]], labio:[[.5,.34]], menton:[[.5,.20]],
+  mandibula:[[.24,.16],[.76,.16]],
+  sienes:[[.15,.65],[.85,.65]],
+  escote:[[.5,-.22]]
 };
 /* Coordenadas en fracciones de la caja del rostro, NO de la caja de todo el avatar.
  * Para colocar cada punto, se intersecta un rayo frontal con la superficie real. */
@@ -64,9 +69,10 @@ function resize(){
 }
 new ResizeObserver(resize).observe(stage);
 function selectionState(){
- for(const [id,mesh] of pinByZone.entries()){
+ for(const [id,meshes] of pinByZone.entries()){
   const zone=document.querySelector('.zone-button[data-zone="'+id+'"]');
-  mesh.material.color.set(zone?.getAttribute('aria-pressed')==='true'?selectedColor:normalColor);
+  const color=zone?.getAttribute('aria-pressed')==='true'?selectedColor:normalColor;
+  for(const mesh of meshes)mesh.material.color.set(color);
  }
 }
 window.addEventListener('routine:zone-change',selectionState);
@@ -85,29 +91,40 @@ function makePin(id,point){
  const dot=new THREE.Mesh(innerGeometry,new THREE.MeshBasicMaterial({color:0xfffbf8,depthTest:true}));
  pin.position.copy(point);dot.position.copy(point);dot.position.z+=.039;
  pin.userData.zone=id;dot.userData.zone=id;
- pinGroup.add(pin,dot);pointMeshes.push(pin,dot);pinByZone.set(id,pin);
+ pinGroup.add(pin,dot);pointMeshes.push(pin,dot);
+ if(!pinByZone.has(id))pinByZone.set(id,[]);
+ pinByZone.get(id).push(pin);
 }
-function surface(x,y,z){
- const forward=new THREE.Vector3(x,y,z+4.0);
- ray.set(forward,new THREE.Vector3(0,0,-1));
- const hits=ray.intersectObjects(headMeshes,true);
- if(hits.length)return hits[0].point.clone().add(new THREE.Vector3(0,0,.055));
- return new THREE.Vector3(x,y,z+.025);
+function surface(x,y,z,dim){
+ const radius=Math.max(.015,dim.x*.055);
+ // First intersect the actual face surface; small anatomical adjustments help
+ // avoid empty space at the temples, jaw and neckline.
+ const offsets=[[0,0],[-radius,0],[radius,0],[0,-radius],[0,radius],
+                [-radius*.6,-radius*.5],[radius*.6,radius*.5]];
+ for(const [dx,dy] of offsets){
+  ray.set(new THREE.Vector3(x+dx,y+dy,z+4),new THREE.Vector3(0,0,-1));
+  const hit=ray.intersectObjects(headMeshes,true)[0];
+  if(hit) return hit.point.clone().add(new THREE.Vector3(0,0,.05));
+ }
+ return null; // Never place a floating hotspot outside the mannequin.
 }
 function placePins(){
  pinGroup.clear();pinByZone.clear();pointMeshes.length=0;
  const b=headBox,dim=b.getSize(new THREE.Vector3());
  const z=b.max.z;
- for(const [id,[nx,ny]] of Object.entries(coords)){
-   let x=b.min.x+nx*dim.x;
-   let y=b.min.y+ny*dim.y;
-   if(id==='escote'){
-      // High chest / neckline. It is placed below the lower face only where the model extends.
-      const fullBox=new THREE.Box3().setFromObject(model);
-      x=(fullBox.min.x+fullBox.max.x)/2;
-      y=Math.max(fullBox.min.y+.12*fullBox.getSize(new THREE.Vector3()).y, b.min.y-dim.y*.25);
+ for(const [id,positions] of Object.entries(coords)){
+   for(const [nx,ny] of positions){
+     let x=b.min.x+nx*dim.x;
+     let y=b.min.y+ny*dim.y;
+     if(id==='escote'){
+       // Upper chest / lower neck: find the closest part of the real mesh.
+       const fullBox=new THREE.Box3().setFromObject(model);
+       x=(fullBox.min.x+fullBox.max.x)/2;
+       y=fullBox.min.y+.10*fullBox.getSize(new THREE.Vector3()).y;
+     }
+     const point=surface(x,y,z,dim);
+     if(point)makePin(id,point);
    }
-   makePin(id,surface(x,y,z));
  }
  selectionState();
 }
