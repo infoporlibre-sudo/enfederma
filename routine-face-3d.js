@@ -31,6 +31,27 @@ let selectedGender='mujer', loadedToken=0, ready=false, headMeshes=[], headBox;
 const root=new THREE.Group(),pinGroup=new THREE.Group();
 const pointMeshes=[],pinByZone=new Map();
 let model;
+let bustGroup=null, bodyMesh=null;
+function addGenericBust(faceBounds,gender){
+ // Only when source model lacks an upper torso. Neutral anatomical mannequin.
+ const h=faceBounds.getSize(new THREE.Vector3()).y;
+ const chin=faceBounds.min.y;
+ const skin=new THREE.MeshStandardMaterial({
+   color:gender==='mujer'?0xc99a83:0xbd8b75, roughness:.84, metalness:0
+ });
+ bustGroup=new THREE.Group();
+ const neck=new THREE.Mesh(new THREE.CylinderGeometry(h*.135,h*.155,h*.46,40,1),skin);
+ neck.position.set(0,chin-h*.20,-h*.05);
+ bustGroup.add(neck);
+ const shoulders=new THREE.Mesh(new THREE.SphereGeometry(1,48,32),skin);
+ shoulders.scale.set(h*.75,h*.39,h*.30);
+ shoulders.position.set(0,chin-h*.58,-h*.055);
+ bustGroup.add(shoulders);
+ model.add(bustGroup);
+ bodyMesh=shoulders;
+ model.updateMatrixWorld(true);
+}
+
 const scene=new THREE.Scene();scene.add(root);root.add(pinGroup);
 scene.add(new THREE.HemisphereLight(0xffffff,0xa28370,2.4));
 const key=new THREE.DirectionalLight(0xfff3de,3.0);key.position.set(-2,4,6);scene.add(key);
@@ -59,8 +80,7 @@ const normalColor=0xa87569, selectedColor=0x67483e;
 let viewerMessage='';
 
 function clearModel(){
-  for(const m of pointMeshes){m.geometry=innerGeometry===m.geometry?innerGeometry:outerGeometry;}
-  pinGroup.clear();pinByZone.clear();pointMeshes.length=0;
+  pinGroup.clear();pinByZone.clear();pointMeshes.length=0;bodyMesh=null;bustGroup=null;
   if(model){root.remove(model);model.traverse(o=>{if(o.isMesh){if(Array.isArray(o.material))o.material.forEach(m=>m.dispose());else o.material?.dispose()}});model=null;}
 }
 function resize(){
@@ -117,10 +137,10 @@ function placePins(){
      let x=b.min.x+nx*dim.x;
      let y=b.min.y+ny*dim.y;
      if(id==='escote'){
-       // Upper chest / lower neck: find the closest part of the real mesh.
-       const fullBox=new THREE.Box3().setFromObject(model);
-       x=(fullBox.min.x+fullBox.max.x)/2;
-       y=fullBox.min.y+.10*fullBox.getSize(new THREE.Vector3()).y;
+       // Manubrium/upper décolletage: measured relative to the chin,
+       // NEVER relative to the feet of a full-body model.
+       x=(b.min.x+b.max.x)/2;
+       y=b.min.y-dim.y*.43;
      }
      const point=surface(x,y,z,dim);
      if(point)makePin(id,point);
@@ -149,14 +169,24 @@ async function loadAvatar(gender){
    model.position.sub(center);model.updateMatrixWorld(true);
    root.add(model);
    headBox=measureFace(model);
+   const faceHeight=headBox.getSize(new THREE.Vector3()).y;
+   const totalBounds=new THREE.Box3().setFromObject(model);
+   // If no shoulders/chest exist below the face, supply a neutral 3D mannequin bust.
+   const chestDepthBelowChin=headBox.min.y-totalBounds.min.y;
+   if(chestDepthBelowChin<faceHeight*.5)addGenericBust(headBox,gender);
+   // Keep the face bounds fixed: the added bust must not shift facial landmarks.
    headMeshes=[];model.traverse(n=>{if(n.isMesh){n.frustumCulled=false;headMeshes.push(n)}});
    placePins();
-   const viewCenter=new THREE.Vector3(0,-.25,0);
-   camera.position.set(0,-.10,5.9);controls.target.copy(viewCenter);controls.update();controls.saveState();
+   // Portrait-bust composition: entire face, throat and upper chest.
+   // Camera target is lower than the face so neckline isn't cut off.
+   const portraitTarget=new THREE.Vector3(0,-faceHeight*.24,0);
+   camera.position.set(0,-faceHeight*.22,7.45);
+   controls.target.copy(portraitTarget);
+   controls.update();controls.saveState();
    if(photo)photo.style.visibility='hidden';
    holder.style.display='none';
    ready=true;resize();
-   status.textContent='Arrastra para girar y toca los puntos del rostro, cuello o escote.';
+   status.textContent='Vista de rostro y escote. Gira el maniquí y selecciona las zonas que quieras cuidar.';
  }catch(error){
    console.warn('No se pudo cargar el avatar 3D',error);
    ready=false;clearModel();
