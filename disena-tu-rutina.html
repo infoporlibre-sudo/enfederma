@@ -59,13 +59,13 @@ header{position:sticky;top:0;z-index:30;background:#f8f4efed;backdrop-filter:blu
 <body>
 <header><div class="header-inner"><a class="logo" href="index.html">ENFEDERMA<small>Enfermería dermoestética</small></a><nav class="nav" aria-label="Navegación"><a href="index.html">Inicio</a><a href="skin-id.html">SKIN ID</a><a class="current" href="disena-tu-rutina.html" aria-current="page">Diseña tu rutina</a><a href="dermoblog.html">Dermoblog</a></nav></div></header>
 <main>
-<div class="top wrap"><span class="eyebrow">Cuidado de la piel · Herramienta interactiva</span><h1>Diseña tu propia rutina</h1><p>Elige un maniquí femenino o masculino y selecciona rostro, cuello y escote para crear una rutina orientativa. Descubre una propuesta de cuidado sencilla y orientativa.</p>
+<div class="top wrap"><span class="eyebrow">Cuidado de la piel · Herramienta interactiva</span><h1>Diseña tu propia rutina</h1><p>Elige un rostro femenino o masculino, selecciona sus zonas y descubre una rutina orientativa. Descubre una propuesta de cuidado sencilla y orientativa.</p>
 <div class="steps" id="steps"><span class="active"><strong>1</strong> Selecciona tus zonas</span><span><strong>2</strong> Define tus objetivos</span><span><strong>3</strong> Tu rutina</span></div></div>
 <section class="wrap builder" id="builder">
-<div class="face-card"><div class="mannequin-switch" role="group" aria-label="Selecciona modelo tridimensional"><button type="button" data-mannequin="mujer" aria-pressed="true" class="active">Modelo mujer</button><button type="button" data-mannequin="hombre" aria-pressed="false">Modelo hombre</button></div><div class="face-stage" id="face-stage">
+<div class="face-card"><div class="mannequin-switch" role="group" aria-label="Selecciona modelo tridimensional"><button type="button" data-mannequin="mujer" aria-pressed="true" class="active">Rostro mujer</button><button type="button" data-mannequin="hombre" aria-pressed="false">Rostro hombre</button></div><div class="face-stage" id="face-stage">
 <img src="https://images.pexels.com/photos/5840147/pexels-photo-5840147.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=1000" alt="Rostro frontal de referencia para seleccionar áreas de cuidado cutáneo" loading="eager">
 <div id="spots"></div><div class="face-toolbar"><button id="face-reset" type="button" title="Centrar rostro" aria-label="Centrar rostro">↺</button><button id="face-zoom-in" type="button" title="Acercar" aria-label="Acercar">+</button><button id="face-zoom-out" type="button" title="Alejar" aria-label="Alejar">−</button></div>
-</div><div class="face-footer"><span id="model-status" aria-live="polite">Preparando rostro 3D…</span> Vista del rostro, cuello y escote. Modelo anatómico ilustrativo: no analiza tu rostro.</div></div>
+</div><div class="face-footer"><span id="model-status" aria-live="polite">Preparando rostro 3D…</span> Primer plano de rostro y cuello. Modelo ilustrativo: no analiza tu piel.</div></div>
 <div class="panel">
 <div id="phase-one"><span class="eyebrow">Paso 01</span><h2>¿Qué zonas quieres cuidar?</h2><p>Selecciona tantas como quieras. Puedes cambiarlas cuando quieras.</p><div class="divider"></div>
 <div id="zone-grid" class="zone-grid"></div>
@@ -154,5 +154,5 @@ render();
 </script>
 <script src="ef-chat.js?v=20261111-rutina" defer></script>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"}}</script>
-<script type="module" src="routine-face-3d.js?v=20261111-busto3d"></script>
+<script type="module" src="routine-face-3d.js?v=20261111-rostro-primerplano"></script>
 </body></html>
