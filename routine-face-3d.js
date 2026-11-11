@@ -31,26 +31,8 @@ let selectedGender='mujer', loadedToken=0, ready=false, headMeshes=[], headBox;
 const root=new THREE.Group(),pinGroup=new THREE.Group();
 const pointMeshes=[],pinByZone=new Map();
 let model;
-let bustGroup=null, bodyMesh=null;
-function addGenericBust(faceBounds,gender){
- // Only when source model lacks an upper torso. Neutral anatomical mannequin.
- const h=faceBounds.getSize(new THREE.Vector3()).y;
- const chin=faceBounds.min.y;
- const skin=new THREE.MeshStandardMaterial({
-   color:gender==='mujer'?0xc99a83:0xbd8b75, roughness:.84, metalness:0
- });
- bustGroup=new THREE.Group();
- const neck=new THREE.Mesh(new THREE.CylinderGeometry(h*.135,h*.155,h*.46,40,1),skin);
- neck.position.set(0,chin-h*.20,-h*.05);
- bustGroup.add(neck);
- const shoulders=new THREE.Mesh(new THREE.SphereGeometry(1,48,32),skin);
- shoulders.scale.set(h*.75,h*.39,h*.30);
- shoulders.position.set(0,chin-h*.58,-h*.055);
- bustGroup.add(shoulders);
- root.add(bustGroup);
- bodyMesh=shoulders;
- model.updateMatrixWorld(true);
-}
+// Recortamos el maniquí por debajo del cuello para evitar mostrar torso o cuerpo.
+const cutPlane=new THREE.Plane(new THREE.Vector3(0,1,0),0);
 
 const scene=new THREE.Scene();scene.add(root);root.add(pinGroup);
 scene.add(new THREE.HemisphereLight(0xffffff,0xa28370,2.4));
@@ -60,6 +42,7 @@ const camera=new THREE.PerspectiveCamera(35,1,.1,100);
 camera.position.set(0,0,6);
 const webgl=new THREE.WebGLRenderer({antialias:true,alpha:true,powerPreference:'low-power'});
 webgl.outputColorSpace=THREE.SRGBColorSpace;
+webgl.localClippingEnabled=true;
 webgl.toneMapping=THREE.ACESFilmicToneMapping;
 webgl.toneMappingExposure=1.12;
 webgl.setPixelRatio(Math.min(devicePixelRatio||1,1.75));
@@ -70,7 +53,7 @@ const controls=new OrbitControls(camera,webgl.domElement);
 controls.enablePan=false;
 controls.enableDamping=true;
 controls.dampingFactor=.09;
-controls.minDistance=3.2;controls.maxDistance=9.5;
+controls.minDistance=2.3;controls.maxDistance=7.5;
 controls.minPolarAngle=Math.PI*.28;controls.maxPolarAngle=Math.PI*.73;
 controls.minAzimuthAngle=-Math.PI*.42;controls.maxAzimuthAngle=Math.PI*.42;
 const ray=new THREE.Raycaster(),cursor=new THREE.Vector2();
@@ -81,8 +64,6 @@ let viewerMessage='';
 
 function clearModel(){
   pinGroup.clear();pinByZone.clear();pointMeshes.length=0;
- if(bustGroup){root.remove(bustGroup);bustGroup.traverse(o=>{if(o.isMesh){o.geometry.dispose();o.material?.dispose();}});}
- bodyMesh=null;bustGroup=null;
   if(model){root.remove(model);model.traverse(o=>{if(o.isMesh){if(Array.isArray(o.material))o.material.forEach(m=>m.dispose());else o.material?.dispose()}});model=null;}
 }
 function resize(){
@@ -142,7 +123,7 @@ function placePins(){
        // Manubrium/upper décolletage: measured relative to the chin,
        // NEVER relative to the feet of a full-body model.
        x=(b.min.x+b.max.x)/2;
-       y=b.min.y-dim.y*.43;
+       y=b.min.y-dim.y*.10;
      }
      const point=surface(x,y,z,dim);
      if(point)makePin(id,point);
@@ -171,25 +152,42 @@ async function loadAvatar(gender){
    model.position.sub(center);model.updateMatrixWorld(true);
    root.add(model);
    headBox=measureFace(model);
-   const faceHeight=headBox.getSize(new THREE.Vector3()).y;
-   const totalBounds=new THREE.Box3().setFromObject(model);
-   // If no shoulders/chest exist below the face, supply a neutral 3D mannequin bust.
-   const chestDepthBelowChin=headBox.min.y-totalBounds.min.y;
-   if(chestDepthBelowChin<faceHeight*.5)addGenericBust(headBox,gender);
-   // Keep the face bounds fixed: the added bust must not shift facial landmarks.
-   headMeshes=[];model.traverse(n=>{if(n.isMesh){n.frustumCulled=false;headMeshes.push(n)}});
-   if(bustGroup)bustGroup.traverse(n=>{if(n.isMesh){n.frustumCulled=false;headMeshes.push(n)}});
+   const faceSize=headBox.getSize(new THREE.Vector3());
+   const faceHeight=faceSize.y;
+   // Solo cara y un poco de cuello; ocultar todo el torso aunque el GLB sea de cuerpo entero.
+   const lowerFaceCut=headBox.min.y-faceHeight*.15;
+   cutPlane.constant=-lowerFaceCut;
+   headMeshes=[];
+   model.traverse(n=>{
+     if(!n.isMesh)return;
+     n.frustumCulled=false;
+     n.material=Array.isArray(n.material)?n.material.map(m=>m.clone()):n.material.clone();
+     for(const mat of Array.isArray(n.material)?n.material:[n.material]){
+       mat.clippingPlanes=[cutPlane];
+       mat.clipShadows=true;
+       mat.needsUpdate=true;
+     }
+     headMeshes.push(n);
+   });
    placePins();
-   // Portrait-bust composition: entire face, throat and upper chest.
-   // Camera target is lower than the face so neckline isn't cut off.
-   const portraitTarget=new THREE.Vector3(0,-faceHeight*.24,0);
-   camera.position.set(0,-faceHeight*.22,7.65);
-   controls.target.copy(portraitTarget);
+   // Primer plano calculado a partir del tamaño REAL de la cabeza, no del cuerpo.
+   // Ajustar en horizontal y vertical para evitar cortar sienes o frente en móvil.
+   const center=new THREE.Vector3(0,-faceHeight*.045,0);
+   const verticalFov=THREE.MathUtils.degToRad(camera.fov);
+   const horizontalFov=2*Math.atan(Math.tan(verticalFov/2)*camera.aspect);
+   const distance=Math.max(
+     (faceHeight*1.15)/(2*Math.tan(verticalFov/2)),
+     (faceSize.x*1.12)/(2*Math.tan(horizontalFov/2))
+   );
+   controls.target.copy(center);
+   camera.position.copy(center).add(new THREE.Vector3(0,0,distance));
+   controls.minDistance=distance*.78;
+   controls.maxDistance=distance*1.75;
    controls.update();controls.saveState();
    if(photo)photo.style.visibility='hidden';
    holder.style.display='none';
    ready=true;resize();
-   status.textContent='Vista de rostro y escote. Gira el maniquí y selecciona las zonas que quieras cuidar.';
+   status.textContent='Vista de rostro y cuello. Gira la cara y selecciona tus zonas.';
  }catch(error){
    console.warn('No se pudo cargar el avatar 3D',error);
    ready=false;clearModel();
