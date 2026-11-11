@@ -47,7 +47,7 @@ function addGenericBust(faceBounds,gender){
  shoulders.scale.set(h*.75,h*.39,h*.30);
  shoulders.position.set(0,chin-h*.58,-h*.055);
  bustGroup.add(shoulders);
- model.add(bustGroup);
+ root.add(bustGroup);
  bodyMesh=shoulders;
  model.updateMatrixWorld(true);
 }
@@ -80,7 +80,9 @@ const normalColor=0xa87569, selectedColor=0x67483e;
 let viewerMessage='';
 
 function clearModel(){
-  pinGroup.clear();pinByZone.clear();pointMeshes.length=0;bodyMesh=null;bustGroup=null;
+  pinGroup.clear();pinByZone.clear();pointMeshes.length=0;
+ if(bustGroup){root.remove(bustGroup);bustGroup.traverse(o=>{if(o.isMesh){o.geometry.dispose();o.material?.dispose();}});}
+ bodyMesh=null;bustGroup=null;
   if(model){root.remove(model);model.traverse(o=>{if(o.isMesh){if(Array.isArray(o.material))o.material.forEach(m=>m.dispose());else o.material?.dispose()}});model=null;}
 }
 function resize(){
@@ -176,11 +178,12 @@ async function loadAvatar(gender){
    if(chestDepthBelowChin<faceHeight*.5)addGenericBust(headBox,gender);
    // Keep the face bounds fixed: the added bust must not shift facial landmarks.
    headMeshes=[];model.traverse(n=>{if(n.isMesh){n.frustumCulled=false;headMeshes.push(n)}});
+   if(bustGroup)bustGroup.traverse(n=>{if(n.isMesh){n.frustumCulled=false;headMeshes.push(n)}});
    placePins();
    // Portrait-bust composition: entire face, throat and upper chest.
    // Camera target is lower than the face so neckline isn't cut off.
    const portraitTarget=new THREE.Vector3(0,-faceHeight*.24,0);
-   camera.position.set(0,-faceHeight*.22,7.45);
+   camera.position.set(0,-faceHeight*.22,7.65);
    controls.target.copy(portraitTarget);
    controls.update();controls.saveState();
    if(photo)photo.style.visibility='hidden';
