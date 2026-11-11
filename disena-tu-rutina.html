@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f8f4ef">
+<title>Diseña tu rutina · Enfederma</title>
+<meta name="description" content="Explora las zonas de tu rostro y genera una rutina orientativa de cuidado cutáneo.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f8f4ef;--pink:#f3e7e8;--ink:#4a352e;--brown:#6d4e42;--gold:#c8a46a;--line:#e3d4cd}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.55 'DM Sans',sans-serif}
+button,input{font:inherit}a{color:inherit;text-decoration:none}button{cursor:pointer}
+header{position:sticky;top:0;z-index:30;background:#f8f4efed;backdrop-filter:blur(18px);border-bottom:1px solid var(--line)}
+.header-inner{max-width:1260px;padding:16px 24px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:25px}
+.logo{font-family:'Cormorant Garamond',serif;font-size:30px;letter-spacing:.08em;font-weight:600}
+.logo small{display:block;font:10px 'DM Sans',sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#8a736a}
+.nav{display:flex;gap:22px;align-items:center;font-size:13px}.nav a:hover{color:#ae7c67}.nav .current{padding:11px 16px;border-radius:30px;background:var(--pink)}
+.wrap{max-width:1250px;margin:auto;padding:0 24px}.top{text-align:center;padding:58px 24px 22px}
+.eyebrow{letter-spacing:.22em;text-transform:uppercase;font-size:11px;color:#997970}.top h1{font-family:'Cormorant Garamond',serif;font-size:clamp(48px,6vw,83px);font-weight:400;line-height:1;margin:17px auto 13px}
+.top p{max-width:620px;margin:0 auto;color:#79665e}
+.steps{margin:31px auto 37px;display:flex;justify-content:center;gap:24px;flex-wrap:wrap;color:#9a847d;font-size:13px}
+.steps strong{display:inline-grid;place-items:center;width:29px;height:29px;margin-right:8px;border:1px solid #caa9a0;border-radius:50%;font-weight:500}.steps .active{color:var(--brown)}.steps .active strong{background:#a87469;color:white}
+.builder{display:grid;grid-template-columns:minmax(340px,1.05fr) minmax(345px,.95fr);align-items:stretch;gap:26px}
+.face-card,.panel{border-radius:28px;border:1px solid #e4d5cf;background:#fffaf7;box-shadow:0 16px 44px #7d5c4a0b;overflow:hidden}
+.face-card{padding:15px;display:flex;flex-direction:column}
+.face-stage{position:relative;aspect-ratio:4/4.65;min-height:490px;max-height:700px;overflow:hidden;border-radius:18px;background:radial-gradient(ellipse at 50% 40%,#fff 5%,#f1e5e0 65%,#ead9d0)}
+.face-stage img{width:100%;height:100%;object-fit:cover;object-position:center center;display:block;filter:saturate(.84) contrast(.97);transform:scale(1.02);transition:transform .5s}
+.face-stage:after{content:"";pointer-events:none;position:absolute;inset:0;background:linear-gradient(180deg,#f5ede51a 20%,#fff0 64%,#f1dedb28 100%)}
+.spot{position:absolute;transform:translate(-50%,-50%);z-index:3;width:34px;height:34px;border:1.5px solid #fff;background:#ad7c76ae;border-radius:50%;color:white;box-shadow:0 0 0 5px #f9ece785,0 5px 15px #60453c25;transition:background .2s,box-shadow .2s,scale .2s}
+.spot:before{content:"";position:absolute;left:50%;top:50%;width:8px;height:8px;border-radius:50%;transform:translate(-50%,-50%);background:white}
+.spot:hover,.spot:focus-visible{background:#6d4e42;scale:1.09;outline:2px solid #c8a46a;outline-offset:5px}
+.spot.selected{background:#654638;box-shadow:0 0 0 7px #d9b9a1b3,0 5px 18px #60453c39}
+.spot-label{position:absolute;z-index:4;pointer-events:none;white-space:nowrap;padding:4px 8px;font-size:11px;color:#5d443c;background:#fffaf7e8;border:1px solid #ecdcd5;border-radius:20px;transform:translate(-50%,0);opacity:0;transition:opacity .2s}
+.spot:hover+.spot-label,.spot:focus-visible+.spot-label{opacity:1}
+.face-footer{padding:14px 8px 2px;text-align:center;color:#8d7770;font-size:12px}
+.panel{padding:clamp(22px,3.5vw,42px);display:flex;flex-direction:column;gap:14px}
+.panel h2{font:500 clamp(33px,3vw,43px)/1.05 'Cormorant Garamond',serif;margin:0}
+.panel p{margin:0;color:#79675f}.divider{height:1px;background:#e5d6ce;margin:3px 0 8px}
+.zone-grid,.concerns{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.zone-button,.concern{padding:11px 10px;border:1px solid #e1d1cb;border-radius:13px;background:#fffdfb;color:#5b453d;text-align:left;font-size:13px;min-height:47px}
+.zone-button[aria-pressed=true],.concern[aria-pressed=true]{background:#f3e0da;border-color:#c69b8e;color:#613e35;box-shadow:inset 0 0 0 1px #c69b8e}
+.zone-button:hover,.concern:hover{border-color:#ad7a6d}
+.selected-list{display:flex;flex-wrap:wrap;gap:7px;min-height:25px}.chip{border:1px solid #e3cbc2;background:#f9e9e5;color:#765447;border-radius:20px;padding:6px 10px;font-size:12px}.chip button{border:0;background:transparent;color:inherit;margin-left:7px;padding:0}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:auto;padding-top:10px}
+.primary,.secondary{padding:13px 21px;border-radius:30px;border:1px solid var(--brown);font-weight:500;font-size:13px;transition:transform .2s,background .2s}
+.primary{color:white;background:var(--brown);flex:1}.secondary{background:transparent;color:var(--brown)}.primary:hover,.secondary:hover{transform:translateY(-2px)}.primary:disabled{opacity:.5;cursor:not-allowed;transform:none}
+.hidden{display:none!important}
+#routine-view{max-width:910px;margin:0 auto}.routine{padding:28px;border:1px solid #e3d4cd;border-radius:24px;background:#fffaf7;margin:12px 0 20px}
+.routine h3{font:500 29px 'Cormorant Garamond',serif;margin:0 0 15px}
+.routine-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.routine-grid article{border-radius:17px;padding:18px;background:#f8efeb}.routine-grid h4{margin:0 0 9px}.routine-grid p{margin:0 0 7px;color:#654f47}
+.info{font-size:12px;color:#806c63!important}.foot{max-width:1000px;margin:45px auto 25px;padding:20px 24px;border-top:1px solid var(--line);font-size:12px;text-align:center;color:#85716b}
+@media(max-width:830px){.builder{grid-template-columns:1fr}.face-card{max-width:620px;width:100%;margin:auto}.panel{max-width:680px;width:100%;margin:auto}.nav{gap:11px}.nav a:not(.current){display:none}}
+@media(max-width:520px){.header-inner{padding:10px 16px}.logo{font-size:24px}.top{padding-top:35px}.top h1{font-size:51px}.wrap{padding:0 12px}.steps{gap:8px;font-size:11px}.steps strong{width:23px;height:23px}.face-card{padding:8px;border-radius:18px}.face-stage{min-height:0;aspect-ratio:4/4.65}.spot{width:26px;height:26px}.panel{padding:19px;border-radius:18px}.routine-grid{grid-template-columns:1fr}.zone-button,.concern{font-size:12px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important;scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+<header><div class="header-inner"><a class="logo" href="index.html">ENFEDERMA<small>Enfermería dermoestética</small></a><nav class="nav" aria-label="Navegación"><a href="index.html">Inicio</a><a href="skin-id.html">SKIN ID</a><a class="current" href="disena-tu-rutina.html" aria-current="page">Diseña tu rutina</a><a href="dermoblog.html">Dermoblog</a></nav></div></header>
+<main>
+<div class="top wrap"><span class="eyebrow">Cuidado de la piel · Herramienta interactiva</span><h1>Diseña tu propia rutina</h1><p>Selecciona las zonas que deseas cuidar y cuéntanos qué necesitas. Descubre una propuesta de cuidado sencilla y orientativa.</p>
+<div class="steps" id="steps"><span class="active"><strong>1</strong> Selecciona tus zonas</span><span><strong>2</strong> Define tus objetivos</span><span><strong>3</strong> Tu rutina</span></div></div>
+<section class="wrap builder" id="builder">
+<div class="face-card"><div class="face-stage" id="face-stage">
+<img src="https://images.pexels.com/photos/5840147/pexels-photo-5840147.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=1000" alt="Rostro frontal de referencia para seleccionar áreas de cuidado cutáneo" loading="eager">
+<div id="spots"></div>
+</div><div class="face-footer">Toca los puntos sobre el rostro o selecciona las zonas en la lista. Imagen ilustrativa: no analiza tu cara.</div></div>
+<div class="panel">
+<div id="phase-one"><span class="eyebrow">Paso 01</span><h2>¿Qué zonas quieres cuidar?</h2><p>Selecciona tantas como quieras. Puedes cambiarlas cuando quieras.</p><div class="divider"></div>
+<div id="zone-grid" class="zone-grid"></div>
+<p class="info">Zonas seleccionadas</p><div id="selected-zones" class="selected-list" aria-live="polite"></div>
+<div class="actions"><button class="primary" id="go-concerns" type="button" disabled>Continuar</button></div>
+</div>
+<div id="phase-two" class="hidden"><span class="eyebrow">Paso 02</span><h2>¿Qué necesita tu piel?</h2><p>Elige los objetivos que te interesan. No necesitas describir defectos físicos ni subir fotografías.</p><div class="divider"></div><div id="concerns" class="concerns"></div>
+<div class="actions"><button type="button" class="secondary" id="back-zones">Atrás</button><button type="button" class="primary" id="make-routine" disabled>Crear mi rutina</button></div></div>
+</div></section>
+<section id="routine-view" class="wrap hidden"><div class="routine"><span class="eyebrow">Paso 03 · Resultado orientativo</span><h3>Tu rutina de cuidado</h3><p id="summary"></p><div class="routine-grid"><article><h4>Por la mañana</h4><div id="morning"></div></article><article><h4>Por la noche</h4><div id="evening"></div></article></div><p class="info" id="extra" style="margin-top:18px"></p><p class="info" style="margin-top:10px">Esta propuesta es educativa, no diagnostica alteraciones de la piel ni sustituye una valoración sanitaria. Introduce nuevos productos gradualmente y suspende su uso si producen irritación.</p></div>
+<div class="actions"><button type="button" id="edit-routine" class="secondary">Modificar selección</button><button type="button" id="copy-routine" class="primary">Copiar mi rutina</button><button type="button" id="reset-routine" class="secondary">Empezar de nuevo</button></div></section>
+</main>
+<footer class="foot">ENFEDERMA · Enfermería dermoestética · La selección se conserva temporalmente en esta pestaña. No enviamos tus respuestas a un servidor. <a href="https://www.pexels.com/photo/close-up-photo-of-a-beautiful-woman-5840147/" target="_blank" rel="noopener noreferrer">Imagen: Pexels</a>.</footer>
+<script>
+(()=>{'use strict';
+const zoneData=[
+{id:'frente',name:'Frente',x:50,y:26},
+{id:'entrecejo',name:'Entrecejo',x:50,y:39},
+{id:'ojos',name:'Contorno de ojos',x:34,y:46},
+{id:'pomulos',name:'Pómulos',x:31,y:57},
+{id:'mejillas',name:'Mejillas',x:70,y:57},
+{id:'nariz',name:'Nariz',x:50,y:51},
+{id:'labio',name:'Labio superior',x:50,y:65},
+{id:'menton',name:'Mentón',x:50,y:76},
+{id:'mandibula',name:'Mandíbula',x:73,y:77},
+{id:'sienes',name:'Sienes',x:26,y:38}
+];
+const concernData=[
+{id:'hidratacion',name:'Hidratación y confort'},
+{id:'sensibilidad',name:'Piel sensible'},
+{id:'tono',name:'Tono desigual'},
+{id:'textura',name:'Textura y poros'},
+{id:'lineas',name:'Líneas de expresión'},
+{id:'brillo',name:'Brillos y sebo'}
+];
+const $=id=>document.getElementById(id);
+let zones=new Set(), concerns=new Set();
+try{const saved=JSON.parse(sessionStorage.getItem('enfederma-rutina')||'{}');zones=new Set((saved.zones||[]).filter(x=>zoneData.some(z=>z.id===x))); concerns=new Set((saved.concerns||[]).filter(x=>concernData.some(c=>c.id===x)))}catch{}
+const save=()=>{try{sessionStorage.setItem('enfederma-rutina',JSON.stringify({zones:[...zones],concerns:[...concerns]}))}catch{}};
+const goTop=()=>window.scrollTo({top:0,behavior:'smooth'});
+const spotHolder=$('spots'),grid=$('zone-grid'),chips=$('selected-zones'),concernHolder=$('concerns');
+zoneData.forEach(z=>{
+ const button=document.createElement('button');button.type='button';button.className='spot';button.style.left=z.x+'%';button.style.top=z.y+'%';button.setAttribute('aria-label','Seleccionar '+z.name);button.title=z.name;button.dataset.zone=z.id;
+ const label=document.createElement('span');label.className='spot-label';label.style.left=z.x+'%';label.style.top=(z.y+4)+'%';label.textContent=z.name;spotHolder.append(button,label);
+ button.addEventListener('click',()=>toggleZone(z.id));
+ const b=document.createElement('button');b.type='button';b.className='zone-button';b.dataset.zone=z.id;b.textContent=z.name;b.addEventListener('click',()=>toggleZone(z.id));grid.append(b)
+});
+concernData.forEach(c=>{const b=document.createElement('button');b.type='button';b.className='concern';b.dataset.concern=c.id;b.textContent=c.name;b.addEventListener('click',()=>{concerns.has(c.id)?concerns.delete(c.id):concerns.add(c.id);save();render()});concernHolder.append(b)});
+function toggleZone(id){zones.has(id)?zones.delete(id):zones.add(id);save();render()}
+function render(){
+ document.querySelectorAll('[data-zone]').forEach(el=>{const selected=zones.has(el.dataset.zone);el.setAttribute('aria-pressed',String(selected));el.classList.toggle('selected',selected)});
+ document.querySelectorAll('[data-concern]').forEach(el=>el.setAttribute('aria-pressed',String(concerns.has(el.dataset.concern))));
+ chips.replaceChildren();if(!zones.size){chips.textContent='Todavía no has seleccionado ninguna zona.'}
+ zoneData.filter(z=>zones.has(z.id)).forEach(z=>{const chip=document.createElement('span');chip.className='chip';chip.textContent=z.name+' ';const close=document.createElement('button');close.type='button';close.textContent='×';close.setAttribute('aria-label','Quitar '+z.name);close.addEventListener('click',()=>toggleZone(z.id));chip.append(close);chips.append(chip)});
+ $('go-concerns').disabled=!zones.size;$('make-routine').disabled=!concerns.size;
+}
+function step(n){
+ $('phase-one').classList.toggle('hidden',n!==1);$('phase-two').classList.toggle('hidden',n!==2);
+ $('builder').classList.toggle('hidden',n===3);$('routine-view').classList.toggle('hidden',n!==3);
+ document.querySelectorAll('#steps span').forEach((s,i)=>s.classList.toggle('active',i===n-1));goTop()
+}
+$('go-concerns').addEventListener('click',()=>{if(zones.size)step(2)});
+$('back-zones').addEventListener('click',()=>step(1));
+const paragraph=(text)=>{const p=document.createElement('p');p.textContent='• '+text;return p};
+function routineText(){
+ const morning=['Limpieza suave, o solo agua si tu piel lo tolera mejor.','Hidratante sencilla, adecuada a tu comodidad.','Protector solar de amplio espectro SPF 30 o superior, reaplicado cuando proceda.'];
+ const evening=['Limpieza suave para retirar protector solar y suciedad.','Hidratante con ingredientes que favorezcan la barrera cutánea.'];
+ let extra='Empieza con una rutina sencilla y observa cómo responde tu piel.';
+ if(concerns.has('sensibilidad'))extra+=' Si notas sensibilidad, prioriza fórmulas sin perfume y evita introducir varios activos nuevos a la vez.';
+ if(concerns.has('hidratacion'))extra+=' Busca una hidratante con humectantes como glicerina o ácido hialurónico, según tolerancia.';
+ if(concerns.has('tono'))extra+=' La fotoprotección constante es la base para abordar el tono desigual; un profesional puede orientar sobre activos específicos.';
+ if(concerns.has('textura')||concerns.has('brillo'))extra+=' Para textura, poros o brillos, evita la limpieza agresiva; consulta antes de usar exfoliantes potentes.';
+ if(concerns.has('lineas'))extra+=' La hidratación y la protección solar ayudan a mantener el confort y a prevenir efectos del fotoenvejecimiento.';
+ return {morning,evening,extra};
+}
+$('make-routine').addEventListener('click',()=>{if(!zones.size||!concerns.size)return;
+ $('summary').textContent='Zonas: '+zoneData.filter(z=>zones.has(z.id)).map(z=>z.name).join(', ')+'. Objetivos: '+concernData.filter(c=>concerns.has(c.id)).map(c=>c.name).join(', ')+'.';
+ const routine=routineText();['morning','evening'].forEach(type=>{const holder=$(type);holder.replaceChildren();routine[type].forEach(s=>holder.append(paragraph(s)))});$('extra').textContent=routine.extra;save();step(3)});
+$('edit-routine').addEventListener('click',()=>step(2));
+$('reset-routine').addEventListener('click',()=>{zones.clear();concerns.clear();save();render();step(1)});
+$('copy-routine').addEventListener('click',async()=>{const t=$('summary').textContent+'\n\nMañana:\n'+routineText().morning.join('\n')+'\n\nNoche:\n'+routineText().evening.join('\n')+'\n\n'+routineText().extra+'\n\nInformación orientativa, no diagnóstico.';try{await navigator.clipboard.writeText(t);$('copy-routine').textContent='Copiado';setTimeout(()=>$('copy-routine').textContent='Copiar mi rutina',1800)}catch{$('copy-routine').textContent='Selecciona y copia manualmente'}});
+render();
+})();
+</script>
+<script src="ef-chat.js?v=20261111-rutina" defer></script>
+</body></html>
