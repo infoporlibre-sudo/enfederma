@@ -26,7 +26,7 @@ header{position:sticky;top:0;z-index:30;background:#f8f4efed;backdrop-filter:blu
 .face-card,.panel{border-radius:28px;border:1px solid #e4d5cf;background:#fffaf7;box-shadow:0 16px 44px #7d5c4a0b;overflow:hidden}
 .face-card{padding:15px;display:flex;flex-direction:column}
 .face-stage{position:relative;aspect-ratio:4/4.65;min-height:490px;max-height:700px;overflow:hidden;border-radius:18px;background:radial-gradient(ellipse at 50% 40%,#fff 5%,#f1e5e0 65%,#ead9d0)}
-.face-stage img{width:100%;height:100%;object-fit:cover;object-position:center center;display:block;filter:saturate(.84) contrast(.97);transform:scale(1.02);transition:transform .5s}
+.face-3d-canvas{position:absolute;inset:0;z-index:5;width:100%;height:100%;touch-action:none}.face-toolbar{position:absolute;z-index:7;bottom:15px;left:15px;display:flex;gap:8px}.face-toolbar button{width:39px;height:39px;background:#fffaf7ea;border:1px solid #d8c4b9;border-radius:50%;color:#6d4e42;font-size:20px}.face-toolbar button:hover{background:#f3e7e8}.face-stage img{width:100%;height:100%;object-fit:cover;object-position:center center;display:block;filter:saturate(.84) contrast(.97);transform:scale(1.02);transition:transform .5s}
 .face-stage:after{content:"";pointer-events:none;position:absolute;inset:0;background:linear-gradient(180deg,#f5ede51a 20%,#fff0 64%,#f1dedb28 100%)}
 .spot{position:absolute;transform:translate(-50%,-50%);z-index:3;width:34px;height:34px;border:1.5px solid #fff;background:#ad7c76ae;border-radius:50%;color:white;box-shadow:0 0 0 5px #f9ece785,0 5px 15px #60453c25;transition:background .2s,box-shadow .2s,scale .2s}
 .spot:before{content:"";position:absolute;left:50%;top:50%;width:8px;height:8px;border-radius:50%;transform:translate(-50%,-50%);background:white}
@@ -64,8 +64,8 @@ header{position:sticky;top:0;z-index:30;background:#f8f4efed;backdrop-filter:blu
 <section class="wrap builder" id="builder">
 <div class="face-card"><div class="face-stage" id="face-stage">
 <img src="https://images.pexels.com/photos/5840147/pexels-photo-5840147.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=1000" alt="Rostro frontal de referencia para seleccionar áreas de cuidado cutáneo" loading="eager">
-<div id="spots"></div>
-</div><div class="face-footer">Toca los puntos sobre el rostro o selecciona las zonas en la lista. Imagen ilustrativa: no analiza tu cara.</div></div>
+<div id="spots"></div><div class="face-toolbar"><button id="face-reset" type="button" title="Centrar rostro" aria-label="Centrar rostro">↺</button><button id="face-zoom-in" type="button" title="Acercar" aria-label="Acercar">+</button><button id="face-zoom-out" type="button" title="Alejar" aria-label="Alejar">−</button></div>
+</div><div class="face-footer"><span id="model-status" aria-live="polite">Preparando rostro 3D…</span> Modelo ilustrativo: no analiza tu rostro.</div></div>
 <div class="panel">
 <div id="phase-one"><span class="eyebrow">Paso 01</span><h2>¿Qué zonas quieres cuidar?</h2><p>Selecciona tantas como quieras. Puedes cambiarlas cuando quieras.</p><div class="divider"></div>
 <div id="zone-grid" class="zone-grid"></div>
@@ -78,7 +78,7 @@ header{position:sticky;top:0;z-index:30;background:#f8f4efed;backdrop-filter:blu
 <section id="routine-view" class="wrap hidden"><div class="routine"><span class="eyebrow">Paso 03 · Resultado orientativo</span><h3>Tu rutina de cuidado</h3><p id="summary"></p><div class="routine-grid"><article><h4>Por la mañana</h4><div id="morning"></div></article><article><h4>Por la noche</h4><div id="evening"></div></article></div><p class="info" id="extra" style="margin-top:18px"></p><p class="info" style="margin-top:10px">Esta propuesta es educativa, no diagnostica alteraciones de la piel ni sustituye una valoración sanitaria. Introduce nuevos productos gradualmente y suspende su uso si producen irritación.</p></div>
 <div class="actions"><button type="button" id="edit-routine" class="secondary">Modificar selección</button><button type="button" id="copy-routine" class="primary">Copiar mi rutina</button><button type="button" id="reset-routine" class="secondary">Empezar de nuevo</button></div></section>
 </main>
-<footer class="foot">ENFEDERMA · Enfermería dermoestética · La selección se conserva temporalmente en esta pestaña. No enviamos tus respuestas a un servidor. <a href="https://www.pexels.com/photo/close-up-photo-of-a-beautiful-woman-5840147/" target="_blank" rel="noopener noreferrer">Imagen: Pexels</a>.</footer>
+<footer class="foot">ENFEDERMA · Enfermería dermoestética · La selección se conserva temporalmente en esta pestaña. No enviamos tus respuestas a un servidor. <a href="https://www.pexels.com/photo/close-up-photo-of-a-beautiful-woman-5840147/" target="_blank" rel="noopener noreferrer">Imagen alternativa: Pexels</a>. · Modelo 3D: Lee Perry-Smith / Infinite-Realities, licencia <a href="https://creativecommons.org/licenses/by/3.0/" rel="noopener noreferrer" target="_blank">CC BY 3.0</a>.</footer>
 <script>
 (()=>{'use strict';
 const zoneData=[
@@ -114,7 +114,7 @@ zoneData.forEach(z=>{
  const b=document.createElement('button');b.type='button';b.className='zone-button';b.dataset.zone=z.id;b.textContent=z.name;b.addEventListener('click',()=>toggleZone(z.id));grid.append(b)
 });
 concernData.forEach(c=>{const b=document.createElement('button');b.type='button';b.className='concern';b.dataset.concern=c.id;b.textContent=c.name;b.addEventListener('click',()=>{concerns.has(c.id)?concerns.delete(c.id):concerns.add(c.id);save();render()});concernHolder.append(b)});
-function toggleZone(id){zones.has(id)?zones.delete(id):zones.add(id);save();render()}
+function toggleZone(id){zones.has(id)?zones.delete(id):zones.add(id);save();render();window.dispatchEvent(new Event('routine:zone-change'))}
 function render(){
  document.querySelectorAll('[data-zone]').forEach(el=>{const selected=zones.has(el.dataset.zone);el.setAttribute('aria-pressed',String(selected));el.classList.toggle('selected',selected)});
  document.querySelectorAll('[data-concern]').forEach(el=>el.setAttribute('aria-pressed',String(concerns.has(el.dataset.concern))));
@@ -151,4 +151,6 @@ render();
 })();
 </script>
 <script src="ef-chat.js?v=20261111-rutina" defer></script>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"}}</script>
+<script type="module" src="routine-face-3d.js?v=20261111"></script>
 </body></html>
