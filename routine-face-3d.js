@@ -172,15 +172,15 @@ async function loadAvatar(gender){
    placePins();
    // Primer plano calculado a partir del tamaño REAL de la cabeza, no del cuerpo.
    // Ajustar en horizontal y vertical para evitar cortar sienes o frente en móvil.
-   const center=new THREE.Vector3(0,-faceHeight*.045,0);
+   const cameraTarget=new THREE.Vector3(0,-faceHeight*.045,0);
    const verticalFov=THREE.MathUtils.degToRad(camera.fov);
    const horizontalFov=2*Math.atan(Math.tan(verticalFov/2)*camera.aspect);
    const distance=Math.max(
      (faceHeight*1.15)/(2*Math.tan(verticalFov/2)),
      (faceSize.x*1.12)/(2*Math.tan(horizontalFov/2))
    );
-   controls.target.copy(center);
-   camera.position.copy(center).add(new THREE.Vector3(0,0,distance));
+   controls.target.copy(cameraTarget);
+   camera.position.copy(cameraTarget).add(new THREE.Vector3(0,0,distance));
    controls.minDistance=distance*.78;
    controls.maxDistance=distance*1.75;
    controls.update();controls.saveState();
