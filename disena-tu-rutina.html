@@ -89,6 +89,7 @@ const zoneData=[
 {id:'pomulos',name:'Pómulos',x:31,y:57},
 {id:'mejillas',name:'Mejillas',x:70,y:57},
 {id:'nariz',name:'Nariz',x:50,y:51},
+{id:'nariz_poros',name:'Nariz · Poros y puntos negros',x:50,y:57},
 {id:'labio',name:'Labio superior',x:50,y:65},
 {id:'menton',name:'Mentón',x:50,y:76},
 {id:'mandibula',name:'Mandíbula',x:73,y:77},
@@ -138,6 +139,7 @@ function routineText(){
  let extra='Empieza con una rutina sencilla y observa cómo responde tu piel.';
  if(concerns.has('sensibilidad'))extra+=' Si notas sensibilidad, prioriza fórmulas sin perfume y evita introducir varios activos nuevos a la vez.';
  if(zones.has('escote'))extra+=' Incluye cuello y escote en la hidratación y la fotoprotección de forma habitual.';
+ if(zones.has('nariz_poros'))extra+=' Para poros visibles y puntos negros de la nariz, mantén una limpieza suave y evita exprimirlos; puedes consultar a un profesional sobre opciones cosméticas adecuadas a tu piel.';
  if(concerns.has('hidratacion'))extra+=' Busca una hidratante con humectantes como glicerina o ácido hialurónico, según tolerancia.';
  if(concerns.has('tono'))extra+=' La fotoprotección constante es la base para abordar el tono desigual; un profesional puede orientar sobre activos específicos.';
  if(concerns.has('textura')||concerns.has('brillo'))extra+=' Para textura, poros o brillos, evita la limpieza agresiva; consulta antes de usar exfoliantes potentes.';
@@ -155,5 +157,5 @@ render();
 </script>
 <script src="ef-chat.js?v=20261111-rutina" defer></script>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"}}</script>
-<script type="module" src="routine-face-3d.js?v=20261111-puntos-calibrados4"></script>
+<script type="module" src="routine-face-3d.js?v=20261111-nariz-poros5"></script>
 </body></html>
