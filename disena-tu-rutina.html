@@ -54,15 +54,16 @@ header{position:sticky;top:0;z-index:30;background:#f8f4efed;backdrop-filter:blu
 @media(max-width:830px){.builder{grid-template-columns:1fr}.face-card{max-width:620px;width:100%;margin:auto}.panel{max-width:680px;width:100%;margin:auto}.nav{gap:11px}.nav a:not(.current){display:none}}
 @media(max-width:520px){.header-inner{padding:10px 16px}.logo{font-size:24px}.top{padding-top:35px}.top h1{font-size:51px}.wrap{padding:0 12px}.steps{gap:8px;font-size:11px}.steps strong{width:23px;height:23px}.face-card{padding:8px;border-radius:18px}.face-stage{min-height:0;aspect-ratio:4/4.65}.spot{width:26px;height:26px}.panel{padding:19px;border-radius:18px}.routine-grid{grid-template-columns:1fr}.zone-button,.concern{font-size:12px}}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{transition:none!important;scroll-behavior:auto!important}}
+.face-mode-note{text-align:center;margin:0 0 14px;color:#846c62;font-size:12px;letter-spacing:.08em}
 </style>
 </head>
 <body>
 <header><div class="header-inner"><a class="logo" href="index.html">ENFEDERMA<small>Enfermería dermoestética</small></a><nav class="nav" aria-label="Navegación"><a href="index.html">Inicio</a><a href="skin-id.html">SKIN ID</a><a class="current" href="disena-tu-rutina.html" aria-current="page">Diseña tu rutina</a><a href="dermoblog.html">Dermoblog</a></nav></div></header>
 <main>
-<div class="top wrap"><span class="eyebrow">Cuidado de la piel · Herramienta interactiva</span><h1>Diseña tu propia rutina</h1><p>Elige un rostro femenino o masculino, selecciona sus zonas y descubre una rutina orientativa. Descubre una propuesta de cuidado sencilla y orientativa.</p>
+<div class="top wrap"><span class="eyebrow">Cuidado de la piel · Herramienta interactiva</span><h1>Diseña tu propia rutina</h1><p>Gira el rostro 3D, selecciona las zonas que quieras cuidar y descubre una rutina orientativa. Descubre una propuesta de cuidado sencilla y orientativa.</p>
 <div class="steps" id="steps"><span class="active"><strong>1</strong> Selecciona tus zonas</span><span><strong>2</strong> Define tus objetivos</span><span><strong>3</strong> Tu rutina</span></div></div>
 <section class="wrap builder" id="builder">
-<div class="face-card"><div class="mannequin-switch" role="group" aria-label="Selecciona modelo tridimensional"><button type="button" data-mannequin="mujer" aria-pressed="true" class="active">Rostro mujer</button><button type="button" data-mannequin="hombre" aria-pressed="false">Rostro hombre</button></div><div class="face-stage" id="face-stage">
+<div class="face-card"><p class="face-mode-note">Modelo genérico de rostro 3D · Sin cuerpo ni ropa</p><div class="face-stage" id="face-stage">
 <img src="https://images.pexels.com/photos/5840147/pexels-photo-5840147.jpeg?auto=compress&amp;cs=tinysrgb&amp;w=1000" alt="Rostro frontal de referencia para seleccionar áreas de cuidado cutáneo" loading="eager">
 <div id="spots"></div><div class="face-toolbar"><button id="face-reset" type="button" title="Centrar rostro" aria-label="Centrar rostro">↺</button><button id="face-zoom-in" type="button" title="Acercar" aria-label="Acercar">+</button><button id="face-zoom-out" type="button" title="Alejar" aria-label="Alejar">−</button></div>
 </div><div class="face-footer"><span id="model-status" aria-live="polite">Preparando rostro 3D…</span> Primer plano de rostro y cuello. Modelo ilustrativo: no analiza tu piel.</div></div>
@@ -78,7 +79,7 @@ header{position:sticky;top:0;z-index:30;background:#f8f4efed;backdrop-filter:blu
 <section id="routine-view" class="wrap hidden"><div class="routine"><span class="eyebrow">Paso 03 · Resultado orientativo</span><h3>Tu rutina de cuidado</h3><p id="summary"></p><div class="routine-grid"><article><h4>Por la mañana</h4><div id="morning"></div></article><article><h4>Por la noche</h4><div id="evening"></div></article></div><p class="info" id="extra" style="margin-top:18px"></p><p class="info" style="margin-top:10px">Esta propuesta es educativa, no diagnostica alteraciones de la piel ni sustituye una valoración sanitaria. Introduce nuevos productos gradualmente y suspende su uso si producen irritación.</p></div>
 <div class="actions"><button type="button" id="edit-routine" class="secondary">Modificar selección</button><button type="button" id="copy-routine" class="primary">Copiar mi rutina</button><button type="button" id="reset-routine" class="secondary">Empezar de nuevo</button></div></section>
 </main>
-<footer class="foot">ENFEDERMA · Enfermería dermoestética · La selección se conserva temporalmente en esta pestaña. No enviamos tus respuestas a un servidor. <a href="https://www.pexels.com/photo/close-up-photo-of-a-beautiful-woman-5840147/" target="_blank" rel="noopener noreferrer">Imagen alternativa: Pexels</a>. · Modelos 3D: Microsoft Rocketbox, licencia <a href="https://github.com/interviewflowai/talking-avatar" rel="noopener noreferrer" target="_blank">MIT</a>.</footer>
+<footer class="foot">ENFEDERMA · Enfermería dermoestética · La selección se conserva temporalmente en esta pestaña. No enviamos tus respuestas a un servidor. <a href="https://www.pexels.com/photo/close-up-photo-of-a-beautiful-woman-5840147/" target="_blank" rel="noopener noreferrer">Imagen alternativa: Pexels</a>. · Modelo 3D: Lee Perry-Smith / Infinite-Realities, licencia <a href="https://creativecommons.org/licenses/by/3.0/" rel="noopener noreferrer" target="_blank">CC BY 3.0</a>.</footer>
 <script>
 (()=>{'use strict';
 const zoneData=[
@@ -92,7 +93,7 @@ const zoneData=[
 {id:'menton',name:'Mentón',x:50,y:76},
 {id:'mandibula',name:'Mandíbula',x:73,y:77},
 {id:'sienes',name:'Sienes',x:26,y:38},
-{id:'escote',name:'Cuello y escote',x:50,y:92}
+{id:'escote',name:'Cuello y escote (en lista)',x:50,y:92}
 ];
 const concernData=[
 {id:'hidratacion',name:'Hidratación y confort'},
@@ -154,5 +155,5 @@ render();
 </script>
 <script src="ef-chat.js?v=20261111-rutina" defer></script>
 <script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"}}</script>
-<script type="module" src="routine-face-3d.js?v=20261111-rostro-primerplano"></script>
+<script type="module" src="routine-face-3d.js?v=20261111-solo-cara2"></script>
 </body></html>
