@@ -14,14 +14,16 @@ if(!stage||!spots||!status)throw Error('Falta el visor facial');
 // All anatomical locations in proportions of the face-only bounding box.
 // Positions are checked against the true frontal triangle surface.
 const locations={
- frente:[[.50,.81]],entrecejo:[[.50,.64]],
- ojos:[[.35,.56],[.65,.56]],
- pomulos:[[.30,.46],[.70,.46]],
- mejillas:[[.27,.39],[.73,.39]],
- nariz:[[.50,.49]],labio:[[.50,.34]],
- menton:[[.50,.18]],
- mandibula:[[.30,.19],[.70,.19]],
- sienes:[[.19,.64],[.81,.64]]
+ // Faciales calibrados sobre el rostro 3D: coordenadas relativas a su propia malla.
+ // El entrecejo queda sobre el inicio de las cejas, no sobre el puente nasal.
+ frente:[[.50,.88]],entrecejo:[[.50,.75]],
+ ojos:[[.37,.62],[.63,.62]],
+ pomulos:[[.31,.51],[.69,.51]],
+ mejillas:[[.27,.42],[.73,.42]],
+ nariz:[[.50,.47]],labio:[[.50,.33]],
+ menton:[[.50,.16]],
+ mandibula:[[.31,.23],[.69,.23]],
+ sienes:[[.19,.69],[.81,.69]]
 };
 const normal=0xaf8076,active=0x67483e;
 let object=null,bbox=null,meshes=[],working=false;
