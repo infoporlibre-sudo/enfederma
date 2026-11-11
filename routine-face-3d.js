@@ -1,6 +1,6 @@
-import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js';
-import {GLTFLoader} from 'https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/loaders/GLTFLoader.js';
-import {OrbitControls} from 'https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/controls/OrbitControls.js';
+import * as THREE from 'three';
+import {GLTFLoader} from 'three/addons/loaders/GLTFLoader.js';
+import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
 
 /* Licensed 3D head: Lee Perry-Smith / Infinite-Realities, CC BY 3.0.
  * https://threejs.org/examples/models/gltf/LeePerrySmith/LeePerrySmith.glb
@@ -77,6 +77,7 @@ function load(){
    const scale=3.25/Math.max(size.y,.1);
    head.scale.setScalar(scale);head.position.set(-center.x*scale,-center.y*scale,-center.z*scale);
    modelGroup.add(head);
+   scene.updateMatrixWorld(true);
    const bounds=new THREE.Box3().setFromObject(head);
    const min=bounds.min,max=bounds.max,dim=bounds.getSize(new THREE.Vector3());
    const meshes=[];head.traverse(o=>{if(o.isMesh)meshes.push(o)});
